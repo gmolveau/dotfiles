@@ -77,13 +77,12 @@ npm config set cache ${XDG_CACHE_HOME}/npm &>/dev/null
 
 #-- EXPORTS --#
 # OS Specifics
-if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
+if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
   export NODE_BIN=/usr/local/opt/node@10/bin
   export PIP_BIN=
   export RUBY_BIN=/usr/bin
   export OPENJDK_BIN=
-elif [[ "${OSTYPE}" == "darwin"* ]]; then
-  # LLVM
+elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS / OSX
   export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
   export CPPFLAGS="-I/usr/local/opt/llvm/include"
   export LLVM_BIN="/usr/local/opt/llvm/bin"
@@ -309,9 +308,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
     cargo update
     echo "updating pip and pip apps ..."
     pip3 install --upgrade pip
-    if test ! $(which pip-chill); then
-      pip3 install pip-chill
-    fi
+    command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
     pip-chill --no-version | xargs pip3 install -U
   }
 
@@ -324,7 +321,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
     println "# gem apps "
     gem list --local
     println "# golang apps "
-    ls --color=never -1 ${HOME}/go/bin/
+    ls -1 ${GOBIN}
     println "# cargo apps "
     cargo install --list
     echo "# npm apps \n"
@@ -363,30 +360,31 @@ if [[ "${OSTYPE}" == "darwin"* ]]; then
     cargo update
     println "updating pip and pip apps ..."
     pip3 install --upgrade pip
-    if test ! $(which pip-chill); then
-      pip3 install pip-chill
-    fi
+    command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
     pip-chill --no-version | xargs pip3 install -U
   }
 
   function freeze() {
     #TODO specify a path, creates folders and redirect outputs
-    println "# System and User .app"
-    ls --color=never -1 /Applications # one app per line
-    ls --color=never -1 ~/Applications # one app per line
-    println "# Mac App Store apps"
-    mas list | sed 's/ / #/'
-    println "# brew apps"
-    brew leaves
-    println "# brew cask apps"
-    brew cask list | tr -s ' '
-    println "# pip3 apps"
-    pip-chill --no-version
-    println "# golang apps"
-    ls --color=never -1 ${HOME}/go/bin/
-    println "# cargo apps"
-    cargo install --list
-    println "# npm apps"
-    npm list -g --depth=0
+    local INSTALLED=${XDG_DATA_HOME}/installed_apps
+    mkdir -p ${INSTALLED}
+    echo;println "# System and User .app"
+    ls -1 /Applications | tee /dev/tty > ${INSTALLED}/applications.txt
+    ls -1 ~/Applications | tee /dev/tty > ${INSTALLED}/applications_user.txt
+    echo;println "# Mac App Store apps"
+    mas list | sed 's/ / # /'  | tee /dev/tty > ${INSTALLED}/macappstore.txt
+    echo;println "# brew apps"
+    brew leaves | tee /dev/tty > ${INSTALLED}/brew.txt
+    echo;println "# brew cask apps"
+    brew cask list | tr -s ' ' | tee /dev/tty > ${INSTALLED}/brew.cask.txt
+    echo;println "# pip3 apps"
+    command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
+    pip-chill --no-version | tee /dev/tty > ${INSTALLED}/pip.txt
+    echo;println "# golang apps"
+    ls -1 ${GOBIN} | tee /dev/tty > ${INSTALLED}/go.txt
+    echo;println "# cargo apps"
+    cargo install --list | tee /dev/tty > ${INSTALLED}/cargo.txt
+    echo;println "# npm apps"
+    npm list -g --depth=0 | tee /dev/tty > ${INSTALLED}/npm.txt
   }
 fi
