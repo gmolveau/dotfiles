@@ -1,0 +1,3 @@
+[
+    { "keys": ["alt+i"], "command": "copy_path" }
+]

@@ -1,0 +1,74 @@
+[alias]
+    # git add
+    ap = add --patch
+
+    # git commit
+    c = commit -m
+    amend = commit --amend
+
+    # git diff
+    d = diff
+
+    issues = !open "$(git config remote.origin.url)/issues"
+
+    # git log
+    log = log --graph --abrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
+    l = log
+
+    ls = ls-files
+
+    open = !open "$(git config remote.origin.url)"
+
+    # git remote
+    r = remote -v
+
+    # git status
+    s = status
+
+    tree = log --graph --pretty=format:'%C(auto)%h - %s [%an] (%C(blue)%ar)%C(auto)%d'
+    undo = reset --soft --keep HEAD^
+    zip = archive -o latest.zip HEAD
+
+[apply]
+  whitespace = fix
+
+[branch]
+    autosetupmerge = true
+
+[credential]
+    helper = osxkeychain
+
+[core]
+    autocrlf = input
+    editor = sublime -w
+    excludesfile = ~/.config/git/ignore
+    hooksPath = .githooks
+    pager = diff-so-fancy | less --tabs=4 -RFX # apt install diff-so-fancy | brew install diff-so-fancy
+    whitespace = fix,space-before-tab,tab-in-indent,trailing-space
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = true
+
+[format]
+    pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset
+
+[hub]
+    protocol = https
+
+[log]
+    date = format:%A %d %B %Y - %H:%M
+
+[merge]
+	tool = meld # apt install meld | brew cask install meld
+
+[push]
+    default = current
+
+[user]
+    useConfigOnly = true
+
+[submodule]
+    fetchJobs = 4

@@ -1,0 +1,189 @@
+#!/usr/bin/env sh
+
+restore() {
+  if test ! $(which brew); then
+    echo "Installing homebrew"
+    ruby -e "$(curl -fsSl https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+
+  read -e -p "Enter the full-path of the backup folder location: " BACKUP_PATH
+  eval BACKUP_PATH=$BACKUP_PATH
+
+  #------ Set OSX options ------#
+  echo "Display full path and all files in Finder"
+  defaults write com.apple.finder AppleShowAllFiles -boolean true
+  defaults write com.apple.finder _FXShowPosixPathInTitle -bool YES
+
+  echo "Setup screenshots directory"
+  mkdir ~/Pictures/Screenshots
+  defaults write com.apple.screencapture location ~/Pictures/Screenshots
+  killall Finder
+
+  echo "Set a super fast keyboard repeat rate"
+  defaults write NSGlobalDomain KeyRepeat -int 0.02
+
+  echo "Set a shorter Delay until key repeat"
+  defaults write NSGlobalDomain InitialKeyRepeat -int 12
+
+  #------ Brew Install ------#
+  echo "Updating homebrew"
+  brew update
+
+  echo "Installing homebrew cask"
+  brew cask
+
+  echo "Cleaning up homebrew"
+  brew cleanup
+
+  echo "Disable brew analytics"
+  brew analytics off
+
+  echo "Installing : brew apps"
+  xargs brew install < $BACKUP_PATH/brew.list.txt
+  xargs brew cask install < $BACKUP_PATH/brew.cask.list.txt
+
+  echo "Cleaning up homebrew"
+  brew cleanup
+
+  #------ Pip Install ------#
+  echo "Installing : pip apps"
+  pip3 install -r $BACKUP_PATH/pip3.list.txt --user
+
+  echo "Installing apps from the mac app store"
+  xargs mas install < $BACKUP_PATH/macappstore.list.txt
+
+  #------ Dev folders ------#
+  echo "Installing oh-my-zsh"
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+  # zsh pplugins
+  curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+  mkdir -p ~/dev
+  mkdir -p ~/go
+
+  # ssh
+  echo "backing up : ssh keys"
+  cp -R $BACKUP_PATH/ssh ~/.ssh
+
+  # zsh
+  echo "backing up : .zshrc"
+  cp $BACKUP_PATH/zshrc ~/.zshrc
+
+  # home
+  echo "backing up : scripts"
+  cp $BACKUP_PATH/manage.sh ~/manage.sh
+
+  # screenshot
+  cp $BACKUP_PATH/screenshot.png ~/Pictures/screenshot.png
+
+  # OSX
+  echo "Configuring OSX..."
+
+  # Set fast key repeat rate
+  defaults write NSGlobalDomain KeyRepeat -int 0
+
+  # Require password as soon as screensaver or sleep mode starts
+  defaults write com.apple.screensaver askForPassword -int 1
+  defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+  # Show filename extensions by default
+  defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+  # Enable tap-to-click
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+  defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+  # Disable "natural" scroll
+  defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+}
+
+backup() {
+  TODAY=`date +%Y_%m_%d`
+  BACKUP_NAME="backup_$TODAY"
+
+  read -e -p "Enter full-path where you want your backup stored: " BACKUP_FOLDER
+  eval BACKUP_FOLDER=$BACKUP_FOLDER
+  BACKUP_PATH=$BACKUP_FOLDER/$BACKUP_NAME
+
+  # pre cleaning
+  rm -rf $BACKUP_PATH 2> /dev/null
+  mkdir $BACKUP_PATH
+
+  # dev
+  echo "listing : dev"
+  ls ~/dev > $BACKUP_PATH/dev.list.txt
+
+  # applications
+  echo "listing : applications"
+  ls /Applications > $BACKUP_PATH/applications_system.list.txt
+  mas list | sed 's/ / #/' > $BACKUP_PATH/macappstore.list.txt
+
+  # brew
+  echo "listing : brew apps"
+  brew list > $BACKUP_PATH/brew.list.txt
+  brew cask list > $BACKUP_PATH/brew.cask.list.txt
+
+  # pip
+  echo "listing : pip apps"
+  pip3 freeze > $BACKUP_PATH/pip3.list.txt
+
+  # sublime
+  echo "backing up : sublime text"
+  mkdir -p ${BACKUP_PATH}/sublime
+  cp "${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings" ${BACKUP_PATH}/sublime/Preferences.sublime-settings
+  cp "${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings" "${BACKUP_PATH}/sublime/Package Control.sublime-settings"
+  cp "${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap" "${BACKUP_PATH}/sublime/Default (OSX).sublime-keymap"
+
+  # go
+  echo "listing : personal go projects - github.com/gmolveau"
+  ls ~/go/src/github.com/gmolveau > $BACKUP_PATH/go.list.txt
+
+  # ssh
+  echo "backing up : ssh keys"
+  cp -R ~/.ssh $BACKUP_PATH/ssh
+
+  # zsh
+  echo "backing up : .zshrc"
+  cp ~/.zshrc $BACKUP_PATH/zshrc
+
+  # home
+  echo "backing up : scripts"
+  cp ~/manage.sh $BACKUP_PATH/manage.sh
+
+  # Personal Files
+  echo "backing up : Documents - Pictures"
+  cp -R ~/Documents $BACKUP_PATH/Documents
+  cp -R ~/Pictures $BACKUP_PATH/Pictures
+
+  # checking git repositories
+  find ~ -name .git -type d -prune 2> /dev/null | while read d; do
+     cd $d/..
+     [[ -z $(git status -s) ]] || echo "$PWD:" repo is not clean
+     cd $OLDPWD
+  done
+
+  # screen
+  echo "taking screenshot"
+  screencapture $BACKUP_PATH/screenshot.png
+}
+
+case "$1" in
+  "backup")
+    backup
+    ;;
+  "restore")
+    restore
+    ;;
+  *)
+    echo "unknown command"
+    echo "Syntax : \n"
+    echo "    manage.sh [options]\n"
+    echo "Options : \n"
+    echo "    restore"
+    echo "    backup"
+    exit 1
+    ;;
+esac
+exit 0
