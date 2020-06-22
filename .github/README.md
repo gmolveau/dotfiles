@@ -23,8 +23,12 @@ dotfiles push -u origin master
 ```sh
 # clone the repo
 git clone --bare https://github.com/gmolveau/dotfiles.git ${HOME}/.dotfiles
+# ignore everything so you don't accidentally commit things
+echo "*" >> ${HOME}/.dotfiles/info/exclude
 # add the alias to your .bashrc or .zshrc
 alias dotfiles='/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}'
+# you can now use the alias
+dotfiles config --local status.showUntrackedFiles no
 # when you're ready, clone all the files in your $HOME (use -f if you want to override your current files)
 dotfiles checkout
 ```
