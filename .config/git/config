@@ -19,6 +19,9 @@
 
     open = !open "$(git config remote.origin.url)"
 
+    set-github = !sh -c 'git config user.email "you@example.com" && git config user.name "gmolveau"'
+    set-gitlab = !sh -c 'git config user.email "you@example.com" && git config user.name "gmolveau"'
+
     # git remote
     r = remote -v
 
