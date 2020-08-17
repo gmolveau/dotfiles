@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+set -o errexit # set -e
+set -o nounset # set -u
+set -o pipefail
+
+# references : 
+# - https://medium.com/@loomchild/backup-restore-docker-named-volumes-350397b8e362
+# - https://blog.ssdnodes.com/blog/docker-backup-volumes/
+
+function backup() {
+
+  if (( $# < 1 )); then
+    echo "error : missing volume name argument"
+    exit 1
+  fi
+
+  VOLUME_NAME=$1
+
+  volume_exists "$VOLUME_NAME" || {
+    echo "error : volume '$VOLUME_NAME' does not exist"
+    exit 1
+  }
+
+  TIMESTAMP=$(date -u +"%Y%m%dT%H%M%S")
+  BACKUP_NAME="$VOLUME_NAME-$TIMESTAMP.tar.bz2"
+
+  docker run --rm -v "$VOLUME_NAME":/volume -v "$(pwd)":/backup alpine tar -cjf /backup/"$BACKUP_NAME" -C /volume ./
+  if [ $? -eq 0 ]; then
+    echo "successfully backed up volume '$VOLUME_NAME' to '$(pwd)/$BACKUP_NAME'"
+  else
+    echo "error : failed to backup volume '$VOLUME_NAME'"
+  fi
+
+}
+
+function restore() {
+
+  if (( $# < 2 )); then
+    echo "error : missing volume name and/or backup name argument(s)"
+    exit 1
+  fi
+
+  VOLUME_NAME=$1
+  volume_exists "$VOLUME_NAME" || {
+    echo "error : volume '$VOLUME_NAME' does not exist"
+    exit 1
+  }
+
+  BACKUP_NAME=$2
+  if [ ! -f "$BACKUP_NAME" ]; then
+    echo "error : backup '$BACKUP_NAME' does not exist"
+    exit 1
+  fi
+
+  docker run --rm -v "$VOLUME_NAME":/volume -v "$(pwd)":/backup alpine sh -c "rm -rf /volume/{*,.*} ; tar -C /volume/ -xjf /backup/$BACKUP_NAME"
+  if [ $? -eq 0 ]; then
+    echo "successfully restored volume '$VOLUME_NAME' from '$(pwd)/$BACKUP_NAME'"
+  else
+    echo "error : failed to restore volume '$VOLUME_NAME' from '$(pwd)/$BACKUP_NAME'"
+  fi
+
+}
+
+function volume_exists() {
+
+  if (( $# < 1 )); then
+    echo "error : missing volume name argument"
+    return 1
+  fi
+  VOLUME_NAME=$1
+  docker volume inspect "$VOLUME_NAME" &>/dev/null || return 1
+  return 0
+
+}
+
+case "$1" in
+  "backup")
+    shift
+    backup $@
+    ;;
+  "restore")
+    shift
+    restore $@
+    ;;
+  *)
+    echo "unknown command"
+    echo "Syntax :"
+    echo ""
+    echo "    volume-backup backup <VOLUME_NAME>"
+    echo "    volume-backup restore <VOLUME_NAME> <BACKUP_NAME>"
+    exit 1
+    ;;
+esac
+exit 0

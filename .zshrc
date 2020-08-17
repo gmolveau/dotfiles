@@ -295,6 +295,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
     deactivate 2> /dev/null
     sudo apt update && sudo apt -y upgrade && sudo apt -y dist-upgrade
     echo "updating npm ..."
+    sudo npm install -g npm
     npm update -g
     echo "updating gem ..."
     gem update
