@@ -19,9 +19,6 @@
 
     open = !open "$(git config remote.origin.url)"
 
-    set-github = !sh -c 'git config user.email "you@example.com" && git config user.name "gmolveau"'
-    set-gitlab = !sh -c 'git config user.email "you@example.com" && git config user.name "gmolveau"'
-
     # git remote
     r = remote -v
 
@@ -30,6 +27,8 @@
 
     tree = log --graph --pretty=format:'%C(auto)%h - %s [%an] (%C(blue)%ar)%C(auto)%d'
     undo = reset --soft --keep HEAD^
+    # keep local files but does not track them anymore
+    untrack = update-index --assume-unchanged
     zip = archive -o latest.zip HEAD
 
 [apply]
