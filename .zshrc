@@ -1,5 +1,7 @@
 #-- OH MY ZSH --#
 
+# zmodload zsh/zprof # profiling
+
 ## Install
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 # --- or offline install via :
@@ -56,7 +58,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 #-- COMPINIT --#
-autoload -Uz compinit && compinit -i -d ${HOME}/.cache/zsh/zcompdump-${ZSH_VERSION}
+autoload -Uz compinit
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
+  compinit
+else
+  compinit -C
+fi
+
 
 #-- OPTIONS --#
 setopt hist_reduce_blanks # remove superfluous blanks from history items
@@ -66,10 +74,6 @@ setopt share_history # share history between different instances of the shell
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   shopt -s cdspell # autocorrect typos in path names when using `cd`
 fi
-
-#-- NPM --#
-npm config set prefix ${HOME}/.local &>/dev/null
-npm config set cache ${XDG_CACHE_HOME}/npm &>/dev/null
 
 #-- SUBLIME TEXT --#
 # macOS = ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/sublime
@@ -89,7 +93,7 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS / OSX
   export CC="/usr/local/opt/llvm/bin/clang"
   export CXX="${CC}++"
   export NODE_BIN=/usr/local/opt/node@10/bin
-  export PIP_BIN=${HOME}/Library/Python/3.7/bin
+  export PIP_BIN=${HOME}/Library/Python/3.9/bin
   export RUBY_BIN=/usr/local/opt/ruby/bin
   export OPENJDK_BIN=/usr/local/opt/openjdk/bin
 fi
@@ -122,7 +126,7 @@ export GOPATH=${HOME}/go
 export GOBIN=${GOPATH}/bin
 export CARGO_BIN=${CARGO_HOME}/bin
 export OLD_PATH=${PATH}
-export PATH=${USER_BIN}:${GOBIN}:${CARGO_BIN}:${PIP_BIN}:${NODE_BIN}:${RUBY_BIN}:${LLVM_BIN}:${OPENJDK_BIN}:${PATH}
+export PATH=${GOBIN}:${CARGO_BIN}:${PIP_BIN}:${NODE_BIN}:${RUBY_BIN}:${LLVM_BIN}:${OPENJDK_BIN}:${USER_BIN}:${PATH}
 # FOLDERS
 export ARCHIVE=${HOME}/Nextcloud/Documents/archive
 export NEXTCLOUD=${HOME}/Nextcloud
@@ -388,3 +392,5 @@ if [[ "${OSTYPE}" == "darwin"* ]]; then
     npm list -g --depth=0 | tee /dev/tty > ${INSTALLED}/npm.txt
   }
 fi
+
+# zprof # profiling
