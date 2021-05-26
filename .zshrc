@@ -129,6 +129,9 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   alias pbcopy="xclip -selection clipboard"
 elif [[ "${OSTYPE}" == "darwin"* ]]; then
   #
+elif grep -qi microsoft /proc/version 2> /dev/null; then
+  alias open="explorer.exe"
+  alias pbcopy="clip.exe"
 fi
 
 alias cp="cp -iv"
