@@ -23,7 +23,7 @@ JetBrains Toolbox.app
 Keybase.app
 Keys.app
 Little Snitch Configuration.app
-MKVToolNix-47.0.0.app
+MKVToolNix-48.0.0.app
 MacDown.app
 Meld.app
 Microsoft Excel.app

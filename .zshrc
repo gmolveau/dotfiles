@@ -342,7 +342,6 @@ if [[ "${OSTYPE}" == "darwin"* ]]; then
     brew update
     println "upgrading brew ..."
     brew upgrade
-    brew cask upgrade
     println "cleaning brew ..."
     brew cleanup -s
     #now diagnotic
@@ -379,8 +378,6 @@ if [[ "${OSTYPE}" == "darwin"* ]]; then
     mas list | sed 's/ / # /'  | tee /dev/tty > ${INSTALLED}/macappstore.txt
     echo;println "# brew apps"
     brew leaves | tee /dev/tty > ${INSTALLED}/brew.txt
-    echo;println "# brew cask apps"
-    brew cask list | tr -s ' ' | tee /dev/tty > ${INSTALLED}/brew.cask.txt
     echo;println "# pip3 apps"
     command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
     pip-chill --no-version | tee /dev/tty > ${INSTALLED}/pip.txt
