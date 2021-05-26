@@ -1,6 +1,7 @@
 #-- OH MY ZSH --#
 
-# zmodload zsh/zprof # profiling
+# zmodload zsh/zprof # uncomment for profiling
+# for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done # uncomment for profiling
 
 ## Install
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -42,6 +43,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   local DISTRIB=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
   if [[ "${DISTRIB}" = "Ubuntu"* ]]; then
     plugins+=(ubuntu)
+    skip_global_compinit=1
   elif [[ "${DISTRIB}" = "Debian"* ]]; then
     plugins+=(debian)
   fi
@@ -57,14 +59,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 fi
 
-#-- COMPINIT --#
-autoload -Uz compinit
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
-  compinit
-else
-  compinit -C
-fi
-
+autoload -U compinit && compinit
 
 #-- OPTIONS --#
 setopt hist_reduce_blanks # remove superfluous blanks from history items
@@ -385,4 +380,4 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
   }
 fi
 
-# zprof # profiling
+# zprof # uncomment for profiling
