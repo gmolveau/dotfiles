@@ -125,13 +125,15 @@ export NEXTCLOUD=${HOME}/Nextcloud
 #-- ALIASES --#
 # OS Specifics
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
-  alias open="xdg-open"
-  alias pbcopy="xclip -selection clipboard"
+  if grep -qi microsoft /proc/version 2> /dev/null; then # Microsoft WSL2
+    alias open="explorer.exe"
+    alias pbcopy="clip.exe"
+  else
+    alias open="xdg-open"
+    alias pbcopy="xclip -selection clipboard"
+  fi
 elif [[ "${OSTYPE}" == "darwin"* ]]; then
   #
-elif grep -qi microsoft /proc/version 2> /dev/null; then
-  alias open="explorer.exe"
-  alias pbcopy="clip.exe"
 fi
 
 alias cp="cp -iv"
