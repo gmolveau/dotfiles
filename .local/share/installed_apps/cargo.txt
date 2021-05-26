@@ -1,4 +1,0 @@
-broot v0.11.7:
-    broot
-skim v0.6.9:
-    sk

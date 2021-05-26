@@ -70,10 +70,6 @@ fi
 setopt hist_reduce_blanks # remove superfluous blanks from history items
 setopt inc_append_history # save history entries as soon as they are entered
 setopt share_history # share history between different instances of the shell
-## OS Specifics
-if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
-  shopt -s cdspell # autocorrect typos in path names when using `cd`
-fi
 
 #-- SUBLIME TEXT --#
 # macOS = ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/sublime
@@ -86,7 +82,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
   export PIP_BIN=
   export RUBY_BIN=/usr/bin
   export OPENJDK_BIN=
-elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS / OSX
+elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
   export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
   export CPPFLAGS="-I/usr/local/opt/llvm/include"
   export LLVM_BIN="/usr/local/opt/llvm/bin"
@@ -241,7 +237,7 @@ function pdfcompress() {
   gs -q -dNOPAUSE -dBATCH -dSAFER -sDEVICE=pdfwrite -dCompatibilityLevel=1.3 -dPDFSETTINGS=/screen -dEmbedAllFonts=true -dSubsetFonts=true -dColorImageDownsampleType=/Bicubic -dColorImageResolution=144 -dGrayImageDownsampleType=/Bicubic -dGrayImageResolution=144 -dMonoImageDownsampleType=/Bicubic -dMonoImageResolution=144 -sOutputFile=compressed.${1} ${1};
 }
 
-function println() { echo "$@" ; echo }
+function println() { echo ; echo "$@" ; echo }
 
 function random_string() {
   env LC_CTYPE=C LC_ALL=C tr -dc "a-z0-9" < /dev/urandom | head -c 32; echo
@@ -297,44 +293,44 @@ function archive-web () {
   echo ${FILENAME};
 }
 
-#-- OS SPECIFICS --#
-## Linux
-if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
+if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
 
   function update() {
     deactivate 2> /dev/null
-    sudo apt update && sudo apt upgrade && sudo apt dist-upgrade
+    sudo apt update && sudo apt -y upgrade && sudo apt -y dist-upgrade
     echo "updating npm ..."
+    sudo npm install -g npm
     npm update -g
     echo "updating gem ..."
     gem update
     echo "updating cargo ..."
     cargo update
     echo "updating pip and pip apps ..."
-    pip3 install --upgrade pip
-    command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
+    pip3 install --user --upgrade pip
+    command -v pip-chill >/dev/null 2>&1 || pip3 install --user pip-chill
     pip-chill --no-version | xargs pip3 install -U
   }
 
   function freeze() {
-    # apt list
-    # snap list
-    # ~/bin list
-    echo "\n# pip3 apps \n"
+    println "# apt-get packages"
+    python3 -c "from apt import cache;manual = set(pkg for pkg in cache.Cache() if pkg.is_installed and not pkg.is_auto_installed);depends = set(dep_pkg.name for pkg in manual for dep in pkg.installed.get_dependencies('PreDepends', 'Depends', 'Recommends') for dep_pkg in dep);print('\n'.join(pkg.name for pkg in manual if pkg.name not in depends))"
+    println "# snap packages"
+    snap list | grep -v Publisher | grep -v canonical | awk '{print $1}'
+    if [ -d "$HOME/bin" ]; then
+      println "# user bin "
+      ls -1 "$HOME/bin"
+    fi
+    println "# pip3 apps"
     pip-chill --no-version
-    println "# gem apps "
-    gem list --local
     println "# golang apps "
-    ls -1 ${GOBIN}
+    ls -1 ${GOBIN}  
     println "# cargo apps "
     cargo install --list
     echo "# npm apps \n"
     npm list -g --depth=0
   }
-fi
 
-## macOS / OSX
-if [[ "${OSTYPE}" == "darwin"* ]]; then
+elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
 
   function update() {
     deactivate 2> /dev/null
@@ -362,12 +358,13 @@ if [[ "${OSTYPE}" == "darwin"* ]]; then
     println "updating cargo ..."
     cargo update
     println "updating pip and pip apps ..."
-    pip3 install --upgrade pip
-    command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
+    pip3 install --user --upgrade pip
+    command -v pip-chill >/dev/null 2>&1 || pip3 install --user pip-chill
     pip-chill --no-version | xargs pip3 install -U
   }
 
   function freeze() {
+<<<<<<< HEAD
     #TODO specify a path, creates folders and redirect outputs
     local INSTALLED=${XDG_DATA_HOME}/installed_apps
     mkdir -p ${INSTALLED}
@@ -379,14 +376,26 @@ if [[ "${OSTYPE}" == "darwin"* ]]; then
     echo;println "# brew apps"
     brew leaves | tee /dev/tty > ${INSTALLED}/brew.txt
     echo;println "# pip3 apps"
+=======
+    println "# System and User .app"
+    ls -1 /Applications 
+    ls -1 ~/Applications 
+    println "# Mac App Store apps"
+    mas list | sed 's/ / # /'  
+    println "# brew apps"
+    brew leaves 
+    println "# brew cask apps"
+    brew cask list | tr -s ' ' 
+    println "# pip3 apps"
+>>>>>>> af45f774ae6cdc0f49316be6df5eecd12609ec63
     command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
-    pip-chill --no-version | tee /dev/tty > ${INSTALLED}/pip.txt
-    echo;println "# golang apps"
-    ls -1 ${GOBIN} | tee /dev/tty > ${INSTALLED}/go.txt
-    echo;println "# cargo apps"
-    cargo install --list | tee /dev/tty > ${INSTALLED}/cargo.txt
-    echo;println "# npm apps"
-    npm list -g --depth=0 | tee /dev/tty > ${INSTALLED}/npm.txt
+    pip-chill --no-version 
+    println "# golang apps"
+    ls -1 ${GOBIN} 
+    println "# cargo apps"
+    cargo install --list 
+    println "# npm apps"
+    npm list -g --depth=0 
   }
 fi
 

@@ -1,0 +1,53 @@
+#!/bin/sh
+
+_dir="$(dirname "${0}")"
+
+echo_exit() {
+    if [ $# -lt 1 ]; then
+        echo "an error occured"
+    else
+        echo "$1"
+    fi
+    exit 1
+}
+
+print_usage() {
+  echo "Usage :"
+  echo "    git set-identity <github | gitlab>"
+}
+
+set_identity() {
+	git config user.email "$1"
+	git config user.name "$2"
+}
+
+VARS="${_dir}/vars.env"
+if [ ! -f "$VARS" ]; then
+	echo_exit "error - vars.env file not found"
+fi
+
+. "$VARS"
+
+[ -z "$GITLAB_USERNAME" ] && echo_exit "GITLAB_USERNAME variable not set or empty"
+[ -z "$GITLAB_EMAIL" ] && echo_exit "GITLAB_EMAIL variable not set or empty"
+[ -z "$GITHUB_USERNAME" ] && echo_exit "GITHUB_USERNAME variable not set or empty"
+[ -z "$GITHUB_EMAIL" ] && echo_exit "GITHUB_EMAIL variable not set or empty"
+
+if [ $# -lt 1 ]; then
+  print_usage
+  exit 1
+fi
+
+case "$1" in
+  "github")
+    set_identity "$GITHUB_EMAIL" "$GITHUB_USERNAME"
+    ;;
+  "gitlab")
+    set_identity "$GITLAB_EMAIL" "$GITLAB_USERNAME"
+    ;;
+  *)
+    echo "unknown identity"
+    print_usage
+    exit 1
+    ;;
+esac

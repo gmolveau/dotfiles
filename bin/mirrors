@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -o errexit # set -e
+set -o pipefail
 
 # inspiration : https://jigarius.com/blog/multiple-git-remote-repositories
 ###
@@ -24,6 +25,8 @@ for ENV_VAR in "${ENV_VARS[@]}"; do
     exit 1
   fi
 done
+
+set -o nounset # set -u
 
 # user interaction
 

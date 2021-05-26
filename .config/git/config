@@ -27,6 +27,8 @@
 
     tree = log --graph --pretty=format:'%C(auto)%h - %s [%an] (%C(blue)%ar)%C(auto)%d'
     undo = reset --soft --keep HEAD^
+    # keep local files but does not track them anymore
+    untrack = update-index --assume-unchanged
     zip = archive -o latest.zip HEAD
 
 [apply]
