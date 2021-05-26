@@ -364,19 +364,6 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
   }
 
   function freeze() {
-<<<<<<< HEAD
-    #TODO specify a path, creates folders and redirect outputs
-    local INSTALLED=${XDG_DATA_HOME}/installed_apps
-    mkdir -p ${INSTALLED}
-    echo;println "# System and User .app"
-    ls -1 /Applications | tee /dev/tty > ${INSTALLED}/applications.txt
-    ls -1 ~/Applications | tee /dev/tty > ${INSTALLED}/applications_user.txt
-    echo;println "# Mac App Store apps"
-    mas list | sed 's/ / # /'  | tee /dev/tty > ${INSTALLED}/macappstore.txt
-    echo;println "# brew apps"
-    brew leaves | tee /dev/tty > ${INSTALLED}/brew.txt
-    echo;println "# pip3 apps"
-=======
     println "# System and User .app"
     ls -1 /Applications 
     ls -1 ~/Applications 
@@ -387,7 +374,6 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
     println "# brew cask apps"
     brew cask list | tr -s ' ' 
     println "# pip3 apps"
->>>>>>> af45f774ae6cdc0f49316be6df5eecd12609ec63
     command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
     pip-chill --no-version 
     println "# golang apps"
