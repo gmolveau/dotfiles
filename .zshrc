@@ -13,7 +13,7 @@
 
 export ZSH=${HOME}/.oh-my-zsh
 
-ZSH_THEME="robbyrussell"
+ZSH_THEME="gregouz"
 
 plugins=(
   ## internal plugins : github.com/ohmyzsh/ohmyzsh/tree/master/plugins
@@ -67,6 +67,7 @@ setopt inc_append_history # save history entries as soon as they are entered
 setopt share_history # share history between different instances of the shell
 
 #-- SUBLIME TEXT --#
+# windows = sudo ln -s /mnt/c/Program\ Files/Sublime\ Text\ 3/subl.exe /usr/bin/sublime
 # macOS = ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/sublime
 # linux = ln -s /usr/bin/subl /usr/bin/sublime
 
@@ -151,6 +152,7 @@ alias path='echo -e ${PATH//:/\\n}'
 alias reload="exec ${SHELL} -l"
 alias s="sublime"
 alias sss="sublime ."
+alias ccc="code ."
 alias standup="( cd ~/dev && git standup -m 2 -s -A 'last Monday' -D format:'%A ùd %B %Y - %H:%M' )"
 alias shrug='echo -E "¯\_(ツ)_/¯" | tee /dev/tty | pbcopy'
 alias todo="sublime ${NEXTCLOUD}/Notes/_TODO.txt"
