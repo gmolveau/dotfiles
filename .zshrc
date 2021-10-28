@@ -1,7 +1,7 @@
 #-- OH MY ZSH --#
 
-# zmodload zsh/zprof # uncomment for profiling
-# for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done # uncomment for profiling
+#zmodload zsh/zprof # uncomment for profiling
+#use this for profiling : for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done
 
 ## Install
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -17,6 +17,7 @@ ZSH_THEME="gregouz"
 
 plugins=(
   ## internal plugins : github.com/ohmyzsh/ohmyzsh/tree/master/plugins
+  #brew
   #cargo
   colorize
   colored-man-pages
@@ -37,6 +38,7 @@ plugins=(
   zsh-completions
   # git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
   zsh-syntax-highlighting
+  zshfl # from .oh-my-zsh/custom/plugins
 )
 ## OS Specifics
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
@@ -58,8 +60,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh
   test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 fi
-
-autoload -U compinit && compinit
 
 #-- OPTIONS --#
 setopt hist_reduce_blanks # remove superfluous blanks from history items
@@ -153,6 +153,9 @@ alias reload="exec ${SHELL} -l"
 alias s="sublime"
 alias sss="sublime ."
 alias ccc="code ."
+if [[ "${TERM}" == "xterm-kitty" ]]; then
+  alias ssh="kitty +kitten ssh"
+fi
 alias standup="( cd ~/dev && git standup -m 2 -s -A 'last Monday' -D format:'%A ùd %B %Y - %H:%M' )"
 alias shrug='echo -E "¯\_(ツ)_/¯" | tee /dev/tty | pbcopy'
 alias todo="sublime ${NEXTCLOUD}/Notes/_TODO.txt"
