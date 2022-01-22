@@ -245,7 +245,7 @@ function pdfcompress() {
 function println() { echo ; echo "$@" ; echo }
 
 function random_string() {
-  env LC_CTYPE=C LC_ALL=C tr -dc "a-z0-9" < /dev/urandom | head -c 32; echo
+  openssl rand -hex 32
 }
 
 # create a random folder in /tmp and cd into it
