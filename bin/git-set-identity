@@ -22,16 +22,8 @@ set_identity() {
 }
 
 VARS="${_dir}/vars.env"
-if [ ! -f "$VARS" ]; then
-	echo_exit "error - vars.env file not found"
-fi
-
+[ ! -f "$VARS" ] && echo_exit "error - vars.env file not found"
 . "$VARS"
-
-[ -z "$GITLAB_USERNAME" ] && echo_exit "GITLAB_USERNAME variable not set or empty"
-[ -z "$GITLAB_EMAIL" ] && echo_exit "GITLAB_EMAIL variable not set or empty"
-[ -z "$GITHUB_USERNAME" ] && echo_exit "GITHUB_USERNAME variable not set or empty"
-[ -z "$GITHUB_EMAIL" ] && echo_exit "GITHUB_EMAIL variable not set or empty"
 
 if [ $# -lt 1 ]; then
   print_usage
@@ -40,9 +32,13 @@ fi
 
 case "$1" in
   "github")
+    [ -z "$GITHUB_USERNAME" ] && echo_exit "GITHUB_USERNAME variable not set or empty"
+    [ -z "$GITHUB_EMAIL" ] && echo_exit "GITHUB_EMAIL variable not set or empty"
     set_identity "$GITHUB_EMAIL" "$GITHUB_USERNAME"
     ;;
   "gitlab")
+    [ -z "$GITLAB_USERNAME" ] && echo_exit "GITLAB_USERNAME variable not set or empty"
+    [ -z "$GITLAB_EMAIL" ] && echo_exit "GITLAB_EMAIL variable not set or empty"
     set_identity "$GITLAB_EMAIL" "$GITLAB_USERNAME"
     ;;
   *)
