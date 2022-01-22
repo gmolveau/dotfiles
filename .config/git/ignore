@@ -71,3 +71,5 @@ $RECYCLE.BIN/
 *.swp
 *.pyc
 __pycache__
+
+.vscode
