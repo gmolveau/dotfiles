@@ -52,7 +52,5 @@ ZSH_THEME_GIT_PROMPT_CLEAN=""
 ZSH_THEME_VIRTUALENV_PREFIX=" ("
 ZSH_THEME_VIRTUALENV_SUFFIX=")"
 
-PROMPT='$FG[119]%n@%m%f:%{$terminfo[bold]$fg[blue]%}%//%{$reset_color%}$(git_prompt_info)$(virtualenv_info)$(kubernetes_info)
-%(?.%F{green}.%F{red})%(!.#.❯)%f $ '
-
-RPROMPT='$FG[248][%*]%f'
+PROMPT='$FG[248][%*]%f $FG[119]%n@%m%f:%{$terminfo[bold]$fg[blue]%}%//%{$reset_color%}$(git_prompt_info)$(virtualenv_info)$(kubernetes_info)
+%(?.%F{green}.%F{red})%? ❯%f $ '
