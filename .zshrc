@@ -64,7 +64,7 @@ fi
 #-- OPTIONS --#
 setopt hist_reduce_blanks # remove superfluous blanks from history items
 setopt inc_append_history # save history entries as soon as they are entered
-setopt share_history # share history between different instances of the shell
+# setopt share_history # share history between different instances of the shell
 
 #-- SUBLIME TEXT --#
 # windows = sudo ln -s /mnt/c/Program\ Files/Sublime\ Text\ 3/subl.exe /usr/bin/sublime
@@ -75,7 +75,7 @@ setopt share_history # share history between different instances of the shell
 # OS Specifics
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
   export NODE_BIN=/usr/local/opt/node@10/bin
-  export PIP_BIN=
+  export PIP_BIN=${HOME}/.local/bin
   export RUBY_BIN=/usr/bin
   export OPENJDK_BIN=
 elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
@@ -118,7 +118,7 @@ export GOPATH=${HOME}/go
 export GOBIN=${GOPATH}/bin
 export CARGO_BIN=${CARGO_HOME}/bin
 export OLD_PATH=${PATH}
-export PATH=${GOBIN}:${CARGO_BIN}:${PIP_BIN}:${NODE_BIN}:${RUBY_BIN}:${LLVM_BIN}:${OPENJDK_BIN}:${USER_BIN}:${PATH}
+export PATH=${PATH}:${GOBIN}:${CARGO_BIN}:${PIP_BIN}:${NODE_BIN}:${RUBY_BIN}:${LLVM_BIN}:${OPENJDK_BIN}:${USER_BIN}
 # FOLDERS
 export ARCHIVE=${HOME}/Nextcloud/Documents/archive
 export NEXTCLOUD=${HOME}/Nextcloud
@@ -145,7 +145,6 @@ alias know="sublime ${HOME}/dev/knowledge/content/docs"
 alias ll="ls -alh"
 alias ln="ln -v"
 alias mv="mv -iv"
-alias myip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias notes="sublime ${HOME}/Nextcloud/Notes"
 alias ooo="open ."
 alias path='echo -e ${PATH//:/\\n}'
@@ -298,6 +297,11 @@ function archive-web () {
   echo ${FILENAME};
 }
 
+function pip-install-save () {
+  python3 -m pip install $1 && python3 -m pip freeze | grep $1 >> requirements.txt
+}
+
+# OS-specifics functions
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
 
   function update() {
