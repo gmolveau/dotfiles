@@ -62,8 +62,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 #-- OPTIONS --#
-setopt hist_reduce_blanks # remove superfluous blanks from history items
-setopt inc_append_history # save history entries as soon as they are entered
+# Print duration of command if it took more than 10 seconds
+REPORTTIME=10
+setopt HIST_REDUCE_BLANKS # remove superfluous blanks from history items
+setopt INC_APPEND_HISTORY # save history entries as soon as they are entered
+setopt EXTENDED_HISTORY # remember command start time and duration
 # setopt share_history # share history between different instances of the shell
 
 #-- SUBLIME TEXT --#
@@ -141,6 +144,7 @@ alias cp="cp -iv"
 alias delete_ds_store="find . -name '.DS_Store' -type f -delete"
 alias dotfiles='/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}'
 alias ffind="sk --ansi -i -c 'ag --color \"{}\"' --bind 'ctrl-p:execute-silent(sublime {1})+accept,ctrl-y:execute(preview.sh {}),command-c:execute(echo {} | pbcopy)'"
+alias k="kubectl"
 alias know="sublime ${HOME}/dev/knowledge/content/docs"
 alias ll="ls -alh"
 alias ln="ln -v"
