@@ -1,0 +1,10 @@
+#!/bin/bash
+
+git fetch -p && (git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads; git for-each-ref --format "%(refname:short) %(upstream)" refs/heads | awk '{if (!$2) print $1;}') | grep -E -v 'master|main|develop' | xargs echo git branch -D
+
+# explanation
+# - `git fetch -p` : fetch branches that no longer exist on remote
+# - `git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads` : list all branches that no longer exist on remote
+# - `git for-each-ref --format "%(refname:short) %(upstream)" refs/heads | awk '{if (!$2) print $1;}'` : list all branches without a remote
+# - `grep -E -v 'master|main|develop'` : remove master, main, develop branches from the results
+# - `xargs echo git branch -D` : print the commande to delete those branches (remove echo if you want to exec this command directly)
