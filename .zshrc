@@ -59,6 +59,10 @@ source ${ZSH}/oh-my-zsh.sh
 if [[ "$OSTYPE" == "darwin"* ]]; then
   # curl -L https://iterm2.com/shell_integration/zsh -o ~/.iterm2_shell_integration.zsh
   test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+  # Specify the preferences directory
+  defaults write com.googlecode.iterm2 "PrefsCustomFolder" -string "~/.config/iterm2/config"
+  # Tell iTerm2 to use the custom preferences in the directory
+  defaults write com.googlecode.iterm2 "LoadPrefsFromCustomFolder" -bool true
 fi
 
 #-- OPTIONS --#
@@ -158,6 +162,7 @@ alias sss="sublime ."
 alias ccc="code ."
 if [[ "${TERM}" == "xterm-kitty" ]]; then
   alias ssh="kitty +kitten ssh"
+  alias icat="kitty +kitten icat --align left"
 fi
 alias standup="( cd ~/dev && git standup -m 2 -s -A 'last Monday' -D format:'%A ùd %B %Y - %H:%M' )"
 alias shrug='echo -E "¯\_(ツ)_/¯" | tee /dev/tty | pbcopy'
@@ -167,6 +172,22 @@ alias xargs='xargs ' # create an xargs alias with trailing space
 alias zshconfig="sublime ~/.zshrc"
 
 #-- FUNCTIONS --#
+
+function calc() {
+  local result=""
+  result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
+  #                       └─ default (when `--mathlib` is used) is 20
+  if [[ "$result" == *.* ]]; then
+    # improve the output for decimal numbers
+    printf "$result" |
+    sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
+      -e 's/^-\./-0./'      `# add "0" for cases like "-.5"`\
+      -e 's/0*$//;s/\.$//'   # remove trailing zeros
+  else
+    printf "$result"
+  fi
+  printf "\n"
+}
 
 # cd to the parent directory of a file, useful when drag-dropping a file into the terminal
 function cdf () { [ -f "${1}" ] && { cd "$(dirname "${1}")"; } || { cd "${1}"; } ; pwd; }
@@ -180,6 +201,11 @@ function cjd () {
 # copy to clipboard
 function clip() {
   cat $1 | pbcopy
+}
+
+# All the dig info
+function digga() {
+  dig +nocmd "$1" any +multiline +noall +answer
 }
 
 # find dirty git repos
@@ -215,9 +241,29 @@ function extract () {
   fi
 }
 
+function f() {
+  find . -name "$1"
+}
+
 # find where a text is located in current dir
 function findtext() {
   grep -rnw . -e "$*"
+}
+
+# Create animated GIFs from any video
+# Uses http://gist.github.com/SlexAxton/4989674
+function gifify() {
+  if [[ -n "$1" ]]; then
+    if [[ $2 == '--good' ]]; then
+      ffmpeg -i $1 -r 10 -vcodec png out-static-%05d.png
+      time convert -verbose +dither -layers Optimize -resize 600x600\> out-static*.png  GIF:- | gifsicle --colors 128 --delay=5 --loop --optimize=3 --multifile - > $1.gif
+      rm out-static*.png
+    else
+      ffmpeg -i $1 -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > $1.gif
+    fi
+  else
+    echo "proper usage: gifify <input_movie.mov>. You DO need to include an extension."
+  fi
 }
 
 # markdown bash execute : https://gist.github.com/gmolveau/67d10dfaea1fdd729865b2f8d46f7488
