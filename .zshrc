@@ -29,6 +29,7 @@ plugins=(
   #httpie
   python
   pip
+  poetry
   #rust
   virtualenv
   ## external plugins
@@ -92,7 +93,7 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
   export CC="/usr/local/opt/llvm/bin/clang"
   export CXX="${CC}++"
   export NODE_BIN=/usr/local/opt/node@10/bin
-  export PIP_BIN=${HOME}/Library/Python/3.9/bin
+  export PIP_BIN=${HOME}/Library/Python/3.10/bin
   export RUBY_BIN=/usr/local/opt/ruby/bin
   export OPENJDK_BIN=/usr/local/opt/openjdk/bin
 fi
@@ -149,6 +150,7 @@ alias delete_ds_store="find . -name '.DS_Store' -type f -delete"
 alias dotfiles='/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}'
 alias ffind="sk --ansi -i -c 'ag --color \"{}\"' --bind 'ctrl-p:execute-silent(sublime {1})+accept,ctrl-y:execute(preview.sh {}),command-c:execute(echo {} | pbcopy)'"
 alias k="kubectl"
+alias kshell='kubectl run -it --image bash --restart Never --rm shell'
 alias know="sublime ${HOME}/dev/knowledge/content/docs"
 alias ll="ls -alh"
 alias ln="ln -v"
