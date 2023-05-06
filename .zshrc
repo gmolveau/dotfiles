@@ -1,15 +1,17 @@
 #-- OH MY ZSH --#
-
-#zmodload zsh/zprof # uncomment for profiling
-#use this for profiling : for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done
-
-## Install
+#--- INSTALL ---#
+# # online install
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# --- or offline install via :
+# # offline install
 # git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
 # cp ~/.zshrc ~/.zshrc.bck
 # cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 # chsh -s $(which zsh)
+
+#--- PROFILING ---#
+# # uncomment the next line and the last line at the end of this file
+# zmodload zsh/zprof
+# # measure with : for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done
 
 export ZSH=${HOME}/.oh-my-zsh
 
@@ -33,15 +35,13 @@ plugins=(
   #rust
   virtualenv
   ## external plugins
-  # git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  zsh-autosuggestions
-  # git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
-  zsh-completions
-  # git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  zsh-syntax-highlighting
-  zshfl # from .oh-my-zsh/custom/plugins
+  #fzf-tab # git clone https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fzf-tab
+  zsh-autosuggestions # git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  zsh-completions # git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
+  zsh-syntax-highlighting # git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  #zshfl # from .oh-my-zsh/custom/plugins
 )
-## OS Specifics
+
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   local DISTRIB=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
   if [[ "${DISTRIB}" = "Ubuntu"* ]]; then
@@ -53,7 +53,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
 elif [[ "${OSTYPE}" == "darwin"* ]]; then
   plugins+=(osx)
 fi
-## finally
+
 source ${ZSH}/oh-my-zsh.sh
 
 #-- MACOS SPECIFICS --#
@@ -67,38 +67,27 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 #-- OPTIONS --#
-# Print duration of command if it took more than 10 seconds
-REPORTTIME=10
+REPORTTIME=10 # Print duration of command if it took more than 10 seconds
 setopt HIST_REDUCE_BLANKS # remove superfluous blanks from history items
 setopt INC_APPEND_HISTORY # save history entries as soon as they are entered
 setopt EXTENDED_HISTORY # remember command start time and duration
 # setopt share_history # share history between different instances of the shell
 
 #-- SUBLIME TEXT --#
-# windows = sudo ln -s /mnt/c/Program\ Files/Sublime\ Text\ 3/subl.exe /usr/bin/sublime
-# macOS = ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/sublime
-# linux = ln -s /usr/bin/subl /usr/bin/sublime
+# # windows = sudo ln -s /mnt/c/Program\ Files/Sublime\ Text\ 3/subl.exe /usr/bin/subl
+# # macOS = ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
 
 #-- EXPORTS --#
-# OS Specifics
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
-  export NODE_BIN=/usr/local/opt/node@10/bin
   export PIP_BIN=${HOME}/.local/bin
   export RUBY_BIN=/usr/bin
   export OPENJDK_BIN=
 elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
-  export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-  export CPPFLAGS="-I/usr/local/opt/llvm/include"
-  export LLVM_BIN="/usr/local/opt/llvm/bin"
-  export CC="/usr/local/opt/llvm/bin/clang"
-  export CXX="${CC}++"
-  export NODE_BIN=/usr/local/opt/node@10/bin
   export PIP_BIN=${HOME}/Library/Python/3.10/bin
   export RUBY_BIN=/usr/local/opt/ruby/bin
   export OPENJDK_BIN=/usr/local/opt/openjdk/bin
 fi
-# ZSH
-export EDITOR='sublime -w'
+export EDITOR='subl -w'
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
 export MANPAGER='less -X' # Don’t clear the screen after quitting a manual page.
@@ -121,57 +110,47 @@ export SQLITE_HISTORY=${XDG_DATA_HOME}/sqlite/history
 # PYTHON
 export PYTHONIOENCODING='UTF-8' # use UTF-8 for stdin,stdout,stderr
 # BINARIES
-export USER_BIN=/usr/local/bin:/usr/local/sbin:${HOME}/.local/bin:${HOME}/bin
+export CARGO_BIN=${CARGO_HOME}/bin
 export GOPATH=${HOME}/go
 export GOBIN=${GOPATH}/bin
-export CARGO_BIN=${CARGO_HOME}/bin
+export NODE_BIN=/usr/local/opt/node@10/bin
+export USER_BIN=/usr/local/bin:/usr/local/sbin:${HOME}/.local/bin:${HOME}/bin
 export OLD_PATH=${PATH}
 export PATH=${PATH}:${GOBIN}:${CARGO_BIN}:${PIP_BIN}:${NODE_BIN}:${RUBY_BIN}:${LLVM_BIN}:${OPENJDK_BIN}:${USER_BIN}
 # FOLDERS
-export ARCHIVE=${HOME}/Nextcloud/Documents/archive
 export NEXTCLOUD=${HOME}/Nextcloud
+export ARCHIVE=${NEXTCLOUD}/Documents/archive
 
 #-- ALIASES --#
-# OS Specifics
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
+  alias open="xdg-open"
+  alias pbcopy="xclip -selection clipboard"
   if grep -qi microsoft /proc/version 2> /dev/null; then # Microsoft WSL2
     alias open="explorer.exe"
     alias pbcopy="clip.exe"
-  else
-    alias open="xdg-open"
-    alias pbcopy="xclip -selection clipboard"
   fi
 elif [[ "${OSTYPE}" == "darwin"* ]]; then
-  #
+  alias delete_ds_store="find . -name '.DS_Store' -type f -delete"
 fi
 
 alias cp="cp -iv"
-alias delete_ds_store="find . -name '.DS_Store' -type f -delete"
 alias dotfiles='/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}'
-alias ffind="sk --ansi -i -c 'ag --color \"{}\"' --bind 'ctrl-p:execute-silent(sublime {1})+accept,ctrl-y:execute(preview.sh {}),command-c:execute(echo {} | pbcopy)'"
-alias k="kubectl"
-alias kshell='kubectl run -it --image bash --restart Never --rm shell'
-alias know="sublime ${HOME}/dev/knowledge/content/docs"
-alias ll="ls -alh"
+alias ffind="sk --ansi -i -c 'ag --color \"{}\"' --bind 'ctrl-p:execute-silent(subl {1})+accept,ctrl-y:execute(preview.sh {}),command-c:execute(echo {} | pbcopy)'"
+alias know="${EDITOR} ${HOME}/dev/knowledge/content/docs"
+alias ll="ls -1AbGhTvl"
 alias ln="ln -v"
 alias mv="mv -iv"
-alias notes="sublime ${HOME}/Nextcloud/Notes"
+alias notes="${EDITOR} ${HOME}/Nextcloud/Notes"
 alias ooo="open ."
 alias path='echo -e ${PATH//:/\\n}'
 alias reload="exec ${SHELL} -l"
-alias s="sublime"
-alias sss="sublime ."
+alias s="subl"
+alias sss="subl ."
 alias ccc="code ."
-if [[ "${TERM}" == "xterm-kitty" ]]; then
-  alias ssh="kitty +kitten ssh"
-  alias icat="kitty +kitten icat --align left"
-fi
-alias standup="( cd ~/dev && git standup -m 2 -s -A 'last Monday' -D format:'%A ùd %B %Y - %H:%M' )"
 alias shrug='echo -E "¯\_(ツ)_/¯" | tee /dev/tty | pbcopy'
-alias todo="sublime ${NEXTCLOUD}/Notes/_TODO.txt"
 alias wget="wget --hsts-file ${XDG_DATA_HOME}/wget/wget_hsts"
 alias xargs='xargs ' # create an xargs alias with trailing space
-alias zshconfig="sublime ~/.zshrc"
+alias zshconfig="${EDITOR} ~/.zshrc"
 
 #-- FUNCTIONS --#
 
@@ -195,7 +174,7 @@ function calc() {
 function cdf () { [ -f "${1}" ] && { cd "$(dirname "${1}")"; } || { cd "${1}"; } ; pwd; }
 alias fcd="cdf"
 
-# johnnydecimal cd - johnnydecimal.com/concepts/working-at-the-terminal/
+# johnnydecimal cd - https://johnnydecimal.com/concepts/working-at-the-terminal/
 function cjd () {
   pushd ~/Nextcloud/Documents/*/*/${1}*
 }
@@ -203,11 +182,6 @@ function cjd () {
 # copy to clipboard
 function clip() {
   cat $1 | pbcopy
-}
-
-# All the dig info
-function digga() {
-  dig +nocmd "$1" any +multiline +noall +answer
 }
 
 # find dirty git repos
@@ -278,7 +252,7 @@ function mdexe() {
     sed '/^$/d' | # remove empty lines
     ${SHELL} ; # execute the commands
   else
-    echo "${1} is not valid" ;
+    echo "${1} is not a file" ;
   fi
 }
 
@@ -310,8 +284,6 @@ function youtube-mp3 () {
 
 function youtube-mp4() {
   youtube-dl --restrict-filenames --embed-subs --write-auto-sub --merge-output-format mkv -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/mp4' -o '~/Movies/%(title)s.%(ext)s' "${1}"
-  # --postprocessor-args "-c:v libx265 -c:a aac -strict experimental -preset slow -x265-params crf=21"
-  # TODO x265 encode, audio in AAC, constant-quality RF 21, preset slow
 }
 
 #-- PERSONAL ARCHIVE --#
@@ -384,7 +356,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
     println "# pip3 apps"
     pip-chill --no-version
     println "# golang apps "
-    ls -1 ${GOBIN}  
+    ls -1 ${GOBIN}
     println "# cargo apps "
     cargo install --list
     echo "# npm apps \n"
@@ -426,24 +398,24 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
 
   function freeze() {
     println "# System and User .app"
-    ls -1 /Applications 
-    ls -1 ~/Applications 
+    ls -1 /Applications
+    ls -1 ~/Applications
     println "# Mac App Store apps"
-    mas list | sed 's/ / # /'  
+    mas list | sed 's/ / # /'
     println "# brew apps"
-    brew leaves 
+    brew leaves
     println "# brew cask apps"
-    brew cask list | tr -s ' ' 
+    brew cask list | tr -s ' '
     println "# pip3 apps"
     command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
-    pip-chill --no-version 
+    pip-chill --no-version
     println "# golang apps"
-    ls -1 ${GOBIN} 
+    ls -1 ${GOBIN}
     println "# cargo apps"
-    cargo install --list 
+    cargo install --list
     println "# npm apps"
-    npm list -g --depth=0 
+    npm list -g --depth=0
   }
 fi
 
-# zprof # uncomment for profiling
+#zprof # uncomment for profiling
