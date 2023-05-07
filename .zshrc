@@ -83,7 +83,7 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
   export RUBY_BIN=/usr/bin
   export OPENJDK_BIN=
 elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
-  export PIP_BIN=${HOME}/Library/Python/3.10/bin
+  export PIP_BIN="${HOME}/Library/Python/3.10/bin:${HOME}/Library/Python/3.11/bin"
   export RUBY_BIN=/usr/local/opt/ruby/bin
   export OPENJDK_BIN=/usr/local/opt/openjdk/bin
 fi
@@ -113,8 +113,9 @@ export PYTHONIOENCODING='UTF-8' # use UTF-8 for stdin,stdout,stderr
 export CARGO_BIN=${CARGO_HOME}/bin
 export GOPATH=${HOME}/go
 export GOBIN=${GOPATH}/bin
-export NODE_BIN=/usr/local/opt/node@10/bin
-export USER_BIN=/usr/local/bin:/usr/local/sbin:${HOME}/.local/bin:${HOME}/bin
+export NODE_BIN=${HOME}/.local/bin
+export PIP_BIN=${HOME}/.local/bin
+export USER_BIN=/usr/local/bin:/usr/local/sbin:${HOME}/bin
 export OLD_PATH=${PATH}
 export PATH=${PATH}:${GOBIN}:${CARGO_BIN}:${PIP_BIN}:${NODE_BIN}:${RUBY_BIN}:${LLVM_BIN}:${OPENJDK_BIN}:${USER_BIN}
 # FOLDERS
@@ -384,11 +385,9 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
       brew install mas
       mas upgrade
     fi
-    println "updating npm ..."
+    println "updating node apps ..."
     npm update -g
-    println "updating gem ..."
-    gem update
-    println "updating cargo ..."
+    println "updating rust apps ..."
     cargo update
     println "updating pip and pip apps ..."
     pip3 install --user --upgrade pip
@@ -397,15 +396,14 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
   }
 
   function freeze() {
-    println "# System and User .app"
+    println "# /Applications"
     ls -1 /Applications
+    println "# ~/Applications"
     ls -1 ~/Applications
     println "# Mac App Store apps"
     mas list | sed 's/ / # /'
     println "# brew apps"
     brew leaves
-    println "# brew cask apps"
-    brew cask list | tr -s ' '
     println "# pip3 apps"
     command -v pip-chill >/dev/null 2>&1 || pip3 install pip-chill
     pip-chill --no-version
