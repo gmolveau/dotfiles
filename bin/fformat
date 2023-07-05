@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 
-import os, re, unicodedata
+import os
+import re
+import unicodedata
+
 
 def clean(input_str):
     # remove accents, only_ascii
-    nfkd_form = unicodedata.normalize('NFKD', input_str)
-    only_ascii = nfkd_form.encode('ASCII', 'ignore')
-    name = str(only_ascii, 'utf-8')
+    nfkd_form = unicodedata.normalize("NFKD", input_str)
+    only_ascii = nfkd_form.encode("ASCII", "ignore")
+    name = str(only_ascii, "utf-8")
     # replace non alphanumeric caracters by underscore
-    name = re.sub('[^0-9a-zA-Z]+', '_', name)
+    name = re.sub("[^0-9a-zA-Z]+", "_", name).rstrip("_")
     return name
+
 
 def clean_file(name, path):
     s = os.path.splitext(name)
     filename, extension = s[0], s[1]
     clean_file = clean(filename)
     base = os.path.dirname(path)
-    new_file = os.path.join(base, clean_file+extension)
+    new_file = os.path.join(base, f"{clean_file}{extension}")
     os.rename(path, new_file)
+
 
 def clean_folder(name, path):
     clean_folder = clean(name)
@@ -25,6 +30,7 @@ def clean_folder(name, path):
     new_folder = os.path.join(base, clean_folder)
     os.rename(path, new_folder)
     return new_folder
+
 
 def process_folder(path):
     for f_name in os.listdir(path):
@@ -35,5 +41,6 @@ def process_folder(path):
             if os.path.isdir(f_path):
                 n = clean_folder(f_name, f_path)
                 process_folder(n)
+
 
 process_folder(os.getcwd())
