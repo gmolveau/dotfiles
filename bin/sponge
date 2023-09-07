@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+input="$*"
+length="${#input}"
+
+charindex=0
+spongebob_str=""
+
+while [ $charindex -lt $length ]; do
+    char="${input:$charindex:1}"
+    if ! [[ $char == [[:space:]] ]]; then
+        # 50% chance to convert
+        if [ $(($RANDOM % 10)) -lt 5 ]; then
+            char="$(echo ${char} | tr '[[:lower:]]' '[[:upper:]]')"
+        else
+            char="$(echo ${char} | tr '[:upper:]' '[:lower:]')"
+        fi
+    fi
+    spongebob_str="${spongebob_str}$char"
+    charindex=$(( $charindex + 1 ))
+done
+echo "${spongebob_str}"
+exit 0
