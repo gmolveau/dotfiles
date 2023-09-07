@@ -77,6 +77,8 @@ setopt EXTENDED_HISTORY # remember command start time and duration
 # # windows = sudo ln -s /mnt/c/Program\ Files/Sublime\ Text\ 3/subl.exe /usr/bin/subl
 # # macOS = ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" /usr/local/bin/subl
 
+source "${HOME}/.rye/env"
+
 #-- EXPORTS --#
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then # linux
   export PIP_BIN=${HOME}/.local/bin
@@ -126,19 +128,20 @@ export ARCHIVE=${NEXTCLOUD}/Documents/archive
 if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   alias open="xdg-open"
   alias pbcopy="xclip -selection clipboard"
+  alias ll="ls -alh"
   if grep -qi microsoft /proc/version 2> /dev/null; then # Microsoft WSL2
     alias open="explorer.exe"
     alias pbcopy="clip.exe"
   fi
 elif [[ "${OSTYPE}" == "darwin"* ]]; then
   alias delete_ds_store="find . -name '.DS_Store' -type f -delete"
+  alias ll="ls -1AbGhTvl"
 fi
 
 alias cp="cp -iv"
 alias dotfiles='/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}'
 alias ffind="sk --ansi -i -c 'ag --color \"{}\"' --bind 'ctrl-p:execute-silent(subl {1})+accept,ctrl-y:execute(preview.sh {}),command-c:execute(echo {} | pbcopy)'"
 alias know="${EDITOR} ${HOME}/dev/knowledge/content/docs"
-alias ll="ls -1AbGhTvl"
 alias ln="ln -v"
 alias mv="mv -iv"
 alias notes="${EDITOR} ${HOME}/Nextcloud/Notes"
@@ -162,9 +165,9 @@ function calc() {
   if [[ "$result" == *.* ]]; then
     # improve the output for decimal numbers
     printf "$result" |
-    sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
-      -e 's/^-\./-0./'      `# add "0" for cases like "-.5"`\
-      -e 's/0*$//;s/\.$//'   # remove trailing zeros
+    sed -e 's/^\./0./'      # add "0" for cases like ".5" \
+      -e 's/^-\./-0./'      # add "0" for cases like "-.5" \
+      -e 's/0*$//;s/\.$//'  # remove trailing zeros
   else
     printf "$result"
   fi
