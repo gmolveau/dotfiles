@@ -82,6 +82,12 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 echo "> Disable auto-correct"
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
+echo "> Stop iTunes from responding to the keyboard media keys"
+launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
+
+echo "> Trackpad: Disable 'natural' (Lion-style) scrolling"
+defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
+
 echo "> Trackpad: enable tap to click for this user and for the login screen"
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
@@ -188,6 +194,9 @@ chflags nohidden ~/Library
 
 echo "> Finder: Show the /Volumes folder"
 sudo chflags nohidden /Volumes
+
+echo "> Finder: allow text selection in Quick Look"
+defaults write com.apple.finder QLEnableTextSelection -bool true
 
 echo "> Expand the following File Info panes: 'General', 'Open with', and 'Sharing & Permissions'"
 defaults write com.apple.finder FXInfoPanesExpanded -dict \
