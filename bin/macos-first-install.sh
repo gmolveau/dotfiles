@@ -21,12 +21,18 @@ if [[ $(uname -m) == 'arm64' ]]; then
     softwareupdate --install-rosetta --agree-to-license
 fi
 
-echo "> installing homebrew"
+echo "> Homebrew: installing"
 if ! [ -x "$(command -v brew)" ]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-echo "> Show remaining % battery"
+echo "> Homebrew: updating"
+brew update
+
+echo "> Homebrew: disabling analytics"
+brew analytics off
+
+echo "> Battery: Show remaining %"
 defaults write com.apple.menuextra.battery ShowPercent -string "NO"
 
 echo "> Always show scrollbars"
@@ -128,11 +134,14 @@ echo "> Require password immediately after sleep or screen saver begins"
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 
-echo "> Disable shadow in screenshots"
+echo "> Screenshots: Disable shadow"
 defaults write com.apple.screencapture disable-shadow -bool true
 
-echo "> Save screenshots in JPG format (other options: BMP, GIF, JPG, PDF, TIFF)"
+echo "> Screenshots: Save in JPG format (other options: BMP, GIF, JPG, PDF, TIFF)"
 defaults write com.apple.screencapture type -string "jpg"
+
+echo "> Screenshots: Setup directory"
+defaults write com.apple.screencapture location ~/Desktop
 
 echo "> Enable subpixel font rendering on non-Apple LCDs"
 # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
@@ -232,6 +241,24 @@ defaults write com.apple.dock launchanim -bool false
 
 echo "> Dock: Enable spring loading"
 defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+
+# pmset can modify the values of any of the power management settings
+# defined below. You may specify one or more setting & value pairs on the
+# command-line invocation of pmset.  The -a, -b, -c, -u flags determine
+# whether the settings apply to battery ( -b ), charger (wall power) ( -c
+# ), UPS ( -u ) or all ( -a ).
+
+echo "> Energy: Enable lid wakeup (battery + charging)"
+sudo pmset -a lidwake 1
+
+echo "> Energy: Disable powernap on battery"
+sudo pmset -b powernap 0
+
+echo "> Energy: Turn off display after 30 minutes on battery (battery + charging)"
+sudo pmset -a displaysleep 30
+
+echo "> Energy: Disable machine sleep while charging"
+sudo pmset -c sleep 0
 
 echo "> Disable Dashboard"
 defaults write com.apple.dashboard mcx-disabled -bool true
