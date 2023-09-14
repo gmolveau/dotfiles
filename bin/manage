@@ -6,7 +6,13 @@ restore() {
     read -e -p "Enter the full-path of the backup folder location: " BACKUP_PATH
     eval BACKUP_PATH="${BACKUP_PATH}"
 
-    echo "installing brew apps"
+    echo "> Homebrew: updating"
+    brew update
+
+    echo "> Homebrew: disabling analytics"
+    brew analytics off
+
+    echo "> Homebrew: installing apps"
     xargs brew install < "${BACKUP_PATH}/brew.list.txt"
     xargs -I {} brew install {} --cask < "${BACKUP_PATH}/brew.cask.list.txt"
 
@@ -33,7 +39,7 @@ restore() {
     tar -xf "${BACKUP_PATH}/dev.tar" -C ~/dev
 
     echo "Installing apps from the mac app store"
-    xargs mas install < "${BACKUP_PATH}/macappstore.list.txt"
+    cut -d ' ' -f 1 < "${BACKUP_PATH}/macappstore.list.txt" | xargs -I {} mas install {}
 
     # screenshot
     cp "${BACKUP_PATH}/screenshot.png" ~/Pictures/screenshot.png
@@ -41,7 +47,7 @@ restore() {
     # spectacle
     [ -d "${HOME}/Nextcloud" ] && [ -d "/Applications/Spectacle.app" ] && ln -s ~/Nextcloud/SpectacleSettings/Shortcuts.json "$HOME/Library/Application Support/Spectacle/Shortcuts.json"
 
-    # vscode
+    # sublime text
     [ -d "${HOME}/Nextcloud" ] && [ -d "/Applications/Visual Studio Code.app" ] && ln -s "${HOME}/Nextcloud/SublimeTextSettings/User" "${HOME}/.config/sublime-text-3/Packages/User"
 }
 

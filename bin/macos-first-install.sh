@@ -10,8 +10,29 @@ set -o nounset
 echo "> closing system preferences"
 osascript -e 'tell application "System Preferences" to quit'
 
+# Ask for the administrator password upfront
+sudo -v
+
+# Keep-alive: update existing 'sudo' time stamp until the script has finished
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2> /dev/null &
+
+echo "> Rename the hostname"
+sudo scutil --set ComputerName "kebabi-laptop"
+sudo scutil --set HostName "kebabi-laptop"
+sudo scutil --set LocalHostName "kebabi-laptop"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "kebabi-laptop"
+
+eho "> Disable the sound effects on boot"
+sudo nvram SystemAudioVolume=" "
+
 echo "> installing xcode"
-xcode-select --install
+if ! command -v xcode-select &> /dev/null; then
+    xcode-select --install
+fi
 
 echo "> updating macos"
 softwareupdate --install -a
@@ -24,13 +45,11 @@ fi
 echo "> Homebrew: installing"
 if ! [ -x "$(command -v brew)" ]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    (
+        echo
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+    ) >> "~/.zprofile"
 fi
-
-echo "> Homebrew: updating"
-brew update
-
-echo "> Homebrew: disabling analytics"
-brew analytics off
 
 echo "> Battery: Show remaining %"
 defaults write com.apple.menuextra.battery ShowPercent -string "NO"
@@ -112,10 +131,10 @@ defaults write com.apple.Dock expose-animation-duration -float 0.1
 
 # TODO show desktop spread thumb 3 fingers
 echo "> Trackpad: launch Exposé with three fringers swiping down"
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture = 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture 2
 
 echo "> Trackpad: swipe with three fingers horizontaly to switch full-screen apps"
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture = 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture 2
 
 echo "> Trackpad: launchpad pinch thumb and 3 fingers"
 defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture 2
@@ -195,10 +214,12 @@ defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
 
 echo "> Finder: Use list view in all Finder windows by default"
 # Four-letter codes for the other view modes: `icnv`, `clmv`, `glyv`
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults write com.apple.finder FXPreferredViewStyle -string "nlsv"
 
 echo "> Finder: Disable the warning before emptying the Trash"
-defaults write com.apple.finder WarnOnEmptyTrash -bool false# Show the ~/Library folder
+defaults write com.apple.finder WarnOnEmptyTrash -bool false
+
+echo "> Finder: Show the ~/Library folder"
 chflags nohidden ~/Library
 
 echo "> Finder: Show the /Volumes folder"
@@ -349,14 +370,14 @@ defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -stri
 echo "> Mail: Disable automatic spell checking"
 defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
 
-echo "> Spotlight: Hide tray-icon (and subsequent helper)"
-sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
+#echo "> Spotlight: Hide tray-icon (and subsequent helper)"
+#sudo chmod 600 /System/Library/CoreServices/Search.bundle/Contents/MacOS/Search
 
 echo "> Time Machine: Prevent Time Machine from prompting to use new hard drives as backup volume"
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 
-echo "> Time Machine: Disable local Time Machine backups"
-hash tmutil &> /dev/null && sudo tmutil disablelocal
+#echo "> Time Machine: Disable local Time Machine backups"
+#hash tmutil &> /dev/null && sudo tmutil disablelocal
 
 echo "> ActivityMonitor: Show the main window when launching"
 defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
@@ -441,5 +462,9 @@ defaults write com.googlecode.iterm2 PromptOnQuit -bool false
 
 echo "> Messages: Disable smart quotes as it's annoying for messages that contain code"
 defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "automaticQuoteSubstitutionEnabled" -bool false
+
+echo "> Install Roboto Mono fonts"
+curl -LJo "${HOME}/Library/Fonts/RobotoMono-Italic-VariableFont_wght.ttf" "https://github.com/google/fonts/raw/main/apache/robotomono/RobotoMono-Italic%5Bwght%5D.ttf"
+curl -LJo "${HOME}/Library/Fonts/RobotoMono-VariableFont_wght.ttf" "https://github.com/google/fonts/raw/main/apache/robotomono/RobotoMono%5Bwght%5D.ttf"
 
 echo "macos first install done - please reboot"

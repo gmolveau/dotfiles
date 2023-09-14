@@ -48,8 +48,6 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   elif [[ "${DISTRIB}" = "Debian"* ]]; then
     plugins+=(debian)
   fi
-elif [[ "${OSTYPE}" == "darwin"* ]]; then
-  plugins+=(osx)
 fi
 
 source ${ZSH}/oh-my-zsh.sh
