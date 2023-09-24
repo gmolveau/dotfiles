@@ -85,6 +85,7 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
   export RUBY_BIN=/usr/local/opt/ruby/bin
   export OPENJDK_BIN=/usr/local/opt/openjdk/bin
 fi
+export IDE='subl'
 export EDITOR='subl -w'
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
@@ -137,10 +138,10 @@ fi
 alias cp="cp -iv"
 alias dotfiles='/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}'
 alias ffind="sk --ansi -i -c 'ag --color \"{}\"' --bind 'ctrl-p:execute-silent(subl {1})+accept,ctrl-y:execute(preview.sh {}),command-c:execute(echo {} | pbcopy)'"
-alias know="${EDITOR} ${HOME}/dev/knowledge/content/docs"
+alias know="${IDE} ${HOME}/dev/knowledge/content/docs"
 alias ln="ln -v"
 alias mv="mv -iv"
-alias notes="${EDITOR} ${HOME}/Nextcloud/Notes"
+alias notes="${IDE} ${HOME}/Nextcloud/Notes"
 alias ooo="open ."
 alias path='echo -e ${PATH//:/\\n}'
 alias reload="exec ${SHELL} -l"
@@ -150,7 +151,7 @@ alias ccc="code ."
 alias shrug='echo -E "¯\_(ツ)_/¯" | tee /dev/tty | pbcopy'
 alias wget="wget --hsts-file ${XDG_DATA_HOME}/wget/wget_hsts"
 alias xargs='xargs ' # create an xargs alias with trailing space
-alias zshconfig="${EDITOR} ~/.zshrc"
+alias zshconfig="${IDE} ~/.zshrc"
 
 #-- FUNCTIONS --#
 
@@ -377,21 +378,8 @@ elif [[ "${OSTYPE}" == "darwin"* ]]; then # macOS
     brew doctor
     brew missing
 
-    println "updating apps from the mac app store ..."
-    if brew ls --versions mas > /dev/null; then
-      mas upgrade
-    else
-      brew install mas
-      mas upgrade
-    fi
-    println "updating node apps ..."
-    npm update -g
-    println "updating rust apps ..."
-    cargo update
-    println "updating pip and pip apps ..."
-    pip3 install --user --upgrade pip
-    command -v pip-chill >/dev/null 2>&1 || pip3 install --user pip-chill
-    pip-chill --no-version | xargs pip3 install -U
+    println "updating app store apps ..."
+    mas upgrade
   }
 
   function freeze() {
