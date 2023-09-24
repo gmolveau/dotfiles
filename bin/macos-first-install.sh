@@ -188,8 +188,8 @@ defaults write com.apple.finder ShowStatusBar -bool true
 echo "> Finder: show path bar"
 defaults write com.apple.finder ShowPathbar -bool true
 
-echo "> Finder: Display full POSIX path as Finder window title"
-defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+# echo "> Finder: Display full POSIX path as Finder window title"
+# defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 
 echo "> Finder: When performing a search, search the current folder by default"
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
