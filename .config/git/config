@@ -54,6 +54,9 @@
     branch = auto
     ui = true
 
+[diff]
+    algorithm = histogram
+
 [format]
     pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset
 
@@ -61,13 +64,20 @@
     protocol = https
 
 [log]
-    date = format:%A %d %B %Y - %H:%M
+    date = iso
 
 [merge]
+    conflictstyle = zdiff3
 	tool = meld # apt install meld | brew cask install meld
 
 [push]
     default = current
+
+[rebase]
+    autosquash = true
+
+[rerere]
+    enabled = true
 
 [user]
     useConfigOnly = true
