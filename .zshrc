@@ -8,9 +8,7 @@
 # cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 # chsh -s $(which zsh)
 
-#--- PROFILING ---#
-# # uncomment the next line and the last line at the end of this file
-# zmodload zsh/zprof
+# zmodload zsh/zprof # uncomment for profiling
 # # measure with : for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done
 
 export ZSH=${HOME}/.oh-my-zsh
@@ -20,12 +18,12 @@ ZSH_THEME="gregouz"
 plugins=(
   ## internal plugins : github.com/ohmyzsh/ohmyzsh/tree/master/plugins
   #brew
-  #cargo
   colorize
   colored-man-pages
   #command-not-found # warning : increase zsh load time
   docker
   #docker-compose
+  fzf
   git
   golang
   #httpie
@@ -64,10 +62,16 @@ fi
 
 #-- OPTIONS --#
 REPORTTIME=10 # Print duration of command if it took more than 10 seconds
-setopt HIST_REDUCE_BLANKS # remove superfluous blanks from history items
-setopt INC_APPEND_HISTORY # save history entries as soon as they are entered
-setopt EXTENDED_HISTORY # remember command start time and duration
-# setopt share_history # share history between different instances of the shell
+HIST_STAMPS="yyyy-mm-dd"
+HISTSIZE=10000000
+SAVEHIST=10000000
+setopt EXTENDED_HISTORY      # Write the history file in the ':start:elapsed;command' format.
+setopt INC_APPEND_HISTORY    # Write to the history file immediately, not when the shell exits.
+setopt HIST_IGNORE_ALL_DUPS  # Delete an old recorded event if a new event is a duplicate.
+setopt HIST_IGNORE_SPACE     # Do not record an event starting with a space.
+setopt HIST_VERIFY           # Do not execute immediately upon history expansion.
+setopt APPEND_HISTORY        # append to history file (Default)
+setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
 
 #-- SUBLIME TEXT --#
 # # windows = sudo ln -s /mnt/c/Program\ Files/Sublime\ Text\ 3/subl.exe /usr/bin/subl
@@ -150,7 +154,6 @@ alias sss="subl ."
 alias ccc="code ."
 alias shrug='echo -E "¯\_(ツ)_/¯" | tee /dev/tty | pbcopy'
 alias wget="wget --hsts-file ${XDG_DATA_HOME}/wget/wget_hsts"
-alias xargs='xargs ' # create an xargs alias with trailing space
 alias zshconfig="${IDE} ~/.zshrc"
 
 #-- FUNCTIONS --#
