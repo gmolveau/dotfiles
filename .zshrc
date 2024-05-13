@@ -1,12 +1,13 @@
 #-- OH MY ZSH --#
 #--- INSTALL ---#
-# # online install
+#---- online ----#
 # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# # offline install
+#---- offline / airgapped ----#
 # git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
 # cp ~/.zshrc ~/.zshrc.bck
 # cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
 # chsh -s $(which zsh)
+# DISABLE_AUTO_UPDATE=true
 
 # zmodload zsh/zprof # uncomment for profiling
 # # measure with : for i in $(seq 1 10); do /usr/bin/time zsh -i -c exit; done
@@ -48,8 +49,6 @@ if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
   fi
 fi
 
-source ${ZSH}/oh-my-zsh.sh
-
 #-- MACOS SPECIFICS --#
 if [[ "$OSTYPE" == "darwin"* ]]; then
   # curl -L https://iterm2.com/shell_integration/zsh -o ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/iterm2_shell_integration.zsh
@@ -61,6 +60,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 #-- OPTIONS --#
+DISABLE_UPDATE_PROMPT=true # automatically update ohmyzsh
 REPORTTIME=10 # Print duration of command if it took more than 10 seconds
 HIST_STAMPS="yyyy-mm-dd"
 HISTSIZE=10000000
@@ -72,6 +72,8 @@ setopt HIST_IGNORE_SPACE     # Do not record an event starting with a space.
 setopt HIST_VERIFY           # Do not execute immediately upon history expansion.
 setopt APPEND_HISTORY        # append to history file (Default)
 setopt HIST_REDUCE_BLANKS    # Remove superfluous blanks from each command line being added to the history.
+
+source ${ZSH}/oh-my-zsh.sh
 
 #-- SUBLIME TEXT --#
 # # windows = sudo ln -s /mnt/c/Program\ Files/Sublime\ Text\ 3/subl.exe /usr/bin/subl
