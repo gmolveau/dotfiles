@@ -42,7 +42,7 @@
 
 [core]
     autocrlf = input
-    editor = sublime -w
+    editor = subl -w
     excludesfile = ~/.config/git/ignore
     hooksPath = .githooks
     pager = diff-so-fancy | less --tabs=4 -RFX # apt install diff-so-fancy | brew install diff-so-fancy
