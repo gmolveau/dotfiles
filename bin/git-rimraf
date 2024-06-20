@@ -1,6 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
 
-git fetch -p && (git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads; git for-each-ref --format "%(refname:short) %(upstream)" refs/heads | awk '{if (!$2) print $1;}') | grep -E -v 'master|main|develop' | xargs echo git branch -D
+git fetch -p && (
+    git for-each-ref --format='%(if:equals=[gone])%(upstream:track)%(then)%(refname:short)%(end)' refs/heads
+    git for-each-ref --format "%(refname:short) %(upstream)" refs/heads | awk '{if (!$2) print $1;}'
+) | grep -E -v 'master|main|develop' | xargs echo git branch -D
 
 # explanation
 # - `git fetch -p` : fetch branches that no longer exist on remote
