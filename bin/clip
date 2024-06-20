@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# copy content of file to clipboard
+[ -f "$1" ] && { pbcopy < "$1"; }

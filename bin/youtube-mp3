@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+if [ $# -eq 0 ]; then
+    echo "missing argument: URL"
+    exit 1
+fi
+
+! command -v "yt-dlp" &> /dev/null && (
+    echo "yt-dlp is not installed"
+    echo "please install with : "
+    echo "brew install yt-dlp"
+    echo "yt-dlp requires ffmpeg"
+    echo "brew install ffmpeg"
+    exit 1
+)
+
+# shellcheck disable=SC2088
+yt-dlp --restrict-filenames --ignore-errors -f bestaudio --extract-audio --audio-format mp3 --audio-quality 0 -o '~/Music/%(title)s.%(ext)s' "${1}"

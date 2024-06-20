@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# find dirty git repos
+arg1="${1:-.}"
+if [ ! -d "${arg1}" ]; then
+    echo "${arg1} is not a directory"
+    exit
+fi
+
+echo "Looking for dirty git repos in '${1:-.}'"
+find "${1:-.}" -name .git -type d -prune 2> /dev/null | while read -r d; do (
+    cd "$d/.." || exit
+    [[ -z $(git status -s) ]] || echo "${PWD} is not clean"
+); done

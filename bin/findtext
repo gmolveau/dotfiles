@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# print the files and lines where a text is found in current dir
+grep -rnw "." -e "$*"

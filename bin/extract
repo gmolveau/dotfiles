@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# wrapper for easy extraction of compressed files
+
+if [ $# -eq 0 ]; then
+    echo "missing argument"
+    exit 1
+fi
+if [ ! -f "${1}" ]; then
+    echo "${1} is not a file"
+    exit 1
+fi
+
+case ${1} in
+    *.tar.xz) tar xvJf "${1}" ;;
+    *.tar.bz2) tar xvjf "${1}" ;;
+    *.tar.gz) tar xvzf "${1}" ;;
+    *.bz2) bunzip2 "${1}" ;;
+    *.rar) unrar e "${1}" ;;
+    *.gz) gunzip "${1}" ;;
+    *.tar) tar xvf "${1}" ;;
+    *.tbz2) tar xvjf "${1}" ;;
+    *.tgz) tar xvzf "${1}" ;;
+    *.apk) unzip "${1}" ;;
+    *.epub) unzip "${1}" ;;
+    *.xpi) unzip "${1}" ;;
+    *.zip) unzip "${1}" ;;
+    *.war) unzip "${1}" ;;
+    *.jar) unzip "${1}" ;;
+    *.Z) uncompress "${1}" ;;
+    *.7z) 7z x "${1}" ;;
+    *) echo "Can't extract '${1}'" ;;
+esac
