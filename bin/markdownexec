@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# executes the bash scripts in a markdown file
+if [ $# -eq 0 ]; then
+    echo "missing argument"
+    exit 1
+fi
+[ -f "${1}" ] || (
+    echo "'${1}' is not a file"
+    exit
+)
+# shellcheck disable=SC2002
+# shellcheck disable=SC2016
+cat "${1}" \
+    |
+    # print the file
+    sed -n '/```bash/,/```/p' \
+    |
+    # get the bash code blocks
+    sed 's/```bash//g' \
+    |
+    #  remove the ```bash
+    sed 's/```//g' \
+    |
+    # remove the trailing ```
+    sed '/^$/d' \
+    |
+    # remove empty lines
+    ${SHELL} # execute the commands

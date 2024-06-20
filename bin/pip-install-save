@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+if [ $# -eq 0 ]; then
+    echo "missing argument"
+    exit 1
+fi
+
+python3 -m pip install "$1" && python3 -m pip freeze | grep "$1" >> requirements.txt
