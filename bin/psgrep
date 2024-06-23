@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+if [[ $# == 0 ]]; then
+    echo 'Usage: psgrep <process name>'
+    exit 1
+fi
+
+output=$(ps aux)
+header=$(echo "${output}" | head -n1)
+matches=$(echo -n "${output}" | grep -v grep | grep "${1}")
+
+if [[ "$matches" != "" ]]; then
+    echo "${header}"
+    echo "${matches}"
+    exit 0
+fi
+
+exit 2
