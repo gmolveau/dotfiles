@@ -16,15 +16,13 @@ plugins=(
     #rust
     virtualenv
     ## external plugins
-    zsh-autosuggestions     # git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
-    zsh-completions         # git clone https://github.com/zsh-users/zsh-completions "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-completions"
-    zsh-syntax-highlighting # git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
+    zsh-autosuggestions
+    zsh-completions
+    zsh-syntax-highlighting
 )
 
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=white"
-
-if [[ "${RUNNING_OS}" == "ubuntu" ]]; then
+if [[ "${OS}" == "ubuntu" ]]; then
     plugins+=(ubuntu)
-elif [[ "${RUNNING_OS}" == "debian" ]]; then
+elif [[ "${OS}" == "debian" ]]; then
     plugins+=(debian)
 fi
