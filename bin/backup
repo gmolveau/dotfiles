@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# backup a file by creating a copy wih the .bck extension
+
+if [ $# -eq 0 ]; then
+    echo "missing argument"
+    exit 1
+fi
+if [ ! -f "${1}" ]; then
+    echo "${1} is not a file"
+    exit 1
+fi
+
+cp "${1}" "${1}.bck"
