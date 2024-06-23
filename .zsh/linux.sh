@@ -1,4 +1,4 @@
-if [[ "${OSTYPE}" != "linux-gnu"* ]]; then
+if [ "$(uname)" = "Linux" ]; then
     return 1
 fi
 source "${HOME}/.zsh/linux/aliases.sh"
