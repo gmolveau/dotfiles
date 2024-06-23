@@ -30,9 +30,6 @@ test -d ~/.oh-my-zsh || {
 # backup zshrc config just in case
 cp ~/.zshrc ~/.zshrc.bck
 
-# install custom theme
-curl -L -o "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/themes/gregouz.zsh-theme" https://gist.githubusercontent.com/gmolveau/9b6d98ca0ea5ae897a034c4c1d717e81/raw/6f107ee36987126446b4346fe3efc841a9a87484/gregouz.zsh-theme
-
 # install plugins
 for plugin in "zsh-users/zsh-autosuggestions" "zsh-users/zsh-completions" "zsh-syntax-highlighting"; do
     git clone --quiet "https://github.com/${plugin}" "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/$(basename $plugin)"
