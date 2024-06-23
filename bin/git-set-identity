@@ -3,7 +3,9 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-_dir="$(dirname "${0}")"
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename "${__file}" .sh)"
 
 echo_exit() {
     if [ $# -lt 1 ]; then
@@ -24,8 +26,8 @@ set_identity() {
     git config user.name "$2"
 }
 
-VARS="${_dir}/vars.env"
-[ ! -f "$VARS" ] && echo_exit "error - vars.env file not found"
+VARS="${__dir}/${__base}.env"
+[ ! -f "$VARS" ] && echo_exit "error - ${VARS} file not found"
 . "$VARS"
 
 if [ $# -lt 1 ]; then
