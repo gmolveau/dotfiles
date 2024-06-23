@@ -1,10 +1,11 @@
-if [[ "${OSTYPE}" == "linux-gnu"* ]]; then
+OS=$(uname)
+if [ "$OS" = "Linux" ]; then
     DISTRIB=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
     if [[ "${DISTRIB}" = "Ubuntu"* ]]; then
-        export RUNNING_OS="ubuntu"
+        export OS="ubuntu"
     elif [[ "${DISTRIB}" = "Debian"* ]]; then
-        export RUNNING_OS="debian"
+        export OS="debian"
     fi
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    export RUNNING_OS="macos"
+elif [ "$OS" = "Darwin" ]; then
+    export OS="macos"
 fi
