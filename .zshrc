@@ -21,3 +21,4 @@ source "${HOME}/.zsh/vscode.sh"
 source "${HOME}/.zsh/sublime.sh"
 source "${HOME}/.zsh/ruby.sh"
 # zprof # uncomment for profiling
+
