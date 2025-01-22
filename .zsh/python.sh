@@ -5,5 +5,3 @@ export PYTHONIOENCODING='UTF-8'
 
 export PIP_BIN=${HOME}/.local/bin
 export PATH=${PATH}:${PIP_BIN}
-
-source "${HOME}/.zsh/rye.sh"
