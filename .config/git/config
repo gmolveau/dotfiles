@@ -67,8 +67,7 @@
     date = iso
 
 [merge]
-    conflictstyle = zdiff3
-	tool = meld # apt install meld | brew cask install meld
+    tool = meld # apt install meld | brew cask install meld
 
 [push]
     default = current
