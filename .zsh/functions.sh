@@ -18,3 +18,7 @@ function mkcd() {
 function tmp {
     cd "$(mktemp -d /tmp/"${1:-}"_XXXX)" || return 1
 }
+
+function println {
+    echo "$1"
+}
