@@ -20,5 +20,5 @@ source "${HOME}/.zsh/sqlite.sh"
 source "${HOME}/.zsh/vscode.sh"
 source "${HOME}/.zsh/sublime.sh"
 source "${HOME}/.zsh/ruby.sh"
+compinit -d "${XDG_CACHE_HOME}/zsh/zcompdump-${ZSH_VERSION}"
 # zprof # uncomment for profiling
-
