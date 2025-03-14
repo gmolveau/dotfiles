@@ -6,6 +6,7 @@ set -o nounset
 
 OS=$(uname)
 if [ "$OS" = "Linux" ]; then
+    sudo apt update
     INSTALL="sudo apt-get install -y -q"
 elif [ "$OS" = "Darwin" ]; then
     INSTALL="brew install"
@@ -22,6 +23,11 @@ fi
     ${INSTALL} zsh
 }
 
+! command -v "fzf" &> /dev/null && {
+    echo "fzf is not installed. Installing..."
+    ${INSTALL} fzf
+}
+
 test -d ~/.oh-my-zsh || {
     echo "oh-my-zsh is not installed. Installing..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -31,7 +37,7 @@ test -d ~/.oh-my-zsh || {
 cp ~/.zshrc ~/.zshrc.bck
 
 # install plugins
-for plugin in "zsh-users/zsh-autosuggestions" "zsh-users/zsh-completions" "zsh-syntax-highlighting"; do
+for plugin in "zsh-users/zsh-autosuggestions" "zsh-users/zsh-completions" "zsh-users/zsh-syntax-highlighting"; do
     git clone --quiet "https://github.com/${plugin}" "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/$(basename $plugin)"
 done
 
@@ -41,7 +47,10 @@ git clone --bare git@github.com:gmolveau/dotfiles.git "${HOME}/.dotfiles"
 echo "*" >> "${HOME}/.dotfiles/info/exclude"
 # declare the alias for the script
 dotfiles="/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}"
-dotfiles config --local status.showUntrackedFiles no
-dotfiles checkout -f
+${dotfiles} config --local status.showUntrackedFiles no
+${dotfiles} checkout -f
+
+# switch to zsh
+chsh -s $(which zsh)
 
 echo "Please reboot"
