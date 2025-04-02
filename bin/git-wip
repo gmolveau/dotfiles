@@ -3,5 +3,5 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-git add .
-git commit --no-verify --all --message "wip"
+git add -u
+git commit --no-verify --message "wip"
