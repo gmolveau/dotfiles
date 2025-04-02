@@ -2,6 +2,7 @@
 set -o errexit
 set -o pipefail
 set -o nounset
+set -o xtrace
 
 __dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
@@ -18,12 +19,7 @@ echo_exit() {
 
 print_usage() {
     echo "Usage :"
-    echo "    git set-identity <github | gitlab>"
-}
-
-set_identity() {
-    git config user.email "$1"
-    git config user.name "$2"
+    echo "    git set-identity <github | gitlab | github-work | work>"
 }
 
 VARS="${__dir}/${__base}.env"
@@ -35,20 +31,29 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-case "$1" in
-    "github")
-        [ -z "$GITHUB_USERNAME" ] && echo_exit "GITHUB_USERNAME variable not set or empty"
-        [ -z "$GITHUB_EMAIL" ] && echo_exit "GITHUB_EMAIL variable not set or empty"
-        set_identity "$GITHUB_EMAIL" "$GITHUB_USERNAME"
-        ;;
-    "gitlab")
-        [ -z "$GITLAB_USERNAME" ] && echo_exit "GITLAB_USERNAME variable not set or empty"
-        [ -z "$GITLAB_EMAIL" ] && echo_exit "GITLAB_EMAIL variable not set or empty"
-        set_identity "$GITLAB_EMAIL" "$GITLAB_USERNAME"
-        ;;
-    *)
-        echo "unknown identity"
-        print_usage
-        exit 1
-        ;;
-esac
+PROFILE=$(echo "$1" | tr '[:lower:]' '[:upper:]' | tr -cd 'a-zA-Z0-9_-' | tr '-' '_')
+if [ -z "${PROFILE}" ]; then
+    echo_exit "empty profile"
+fi
+
+username_key="${PROFILE}_USERNAME"
+USERNAME=${!username_key:-}
+if [ -z "${USERNAME}" ]; then
+    echo_exit "empty ${PROFILE}_USERNAME"
+fi
+
+email_key="${PROFILE}_EMAIL"
+EMAIL=${!email_key:-}
+if [ -z "${EMAIL}" ]; then
+    echo_exit "empty ${PROFILE}_EMAIL"
+fi
+
+gpg_key="${PROFILE}_GPGSIGN"
+GPGSIGN=${!gpg_key:-false}
+if [ "$GPGSIGN" != "true" ]; then
+    GPGSIGN="false"
+fi
+
+git config user.email "${EMAIL}"
+git config user.name "${USERNAME}"
+git config commit.gpgsign "${GPGSIGN}"
