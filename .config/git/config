@@ -1,33 +1,14 @@
 [alias]
-    # git add
-    ap = add --patch
-
-    # git commit
     c = commit -m
     amend = commit --amend
-
-    # git diff
-    d = diff
-
-    issues = !open "$(git config remote.origin.url)/issues"
-
-    # git log
+    g = grep --break --heading --line-number
     log = log --graph --abrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
     l = log
-
     ls = ls-files
-
-    open = !open "$(git config remote.origin.url)"
-
-    # git remote
-    r = remote -v
-
-    # git status
     s = status
-
+    sup = !git submodule sync && git submodule update --init
     tree = log --graph --pretty=format:'%C(auto)%h - %s [%an] (%C(blue)%ar)%C(auto)%d'
     undo = reset --soft --keep HEAD^
-    # keep local files but does not track them anymore
     untrack = update-index --assume-unchanged
     zip = archive -o latest.zip HEAD
 
@@ -37,10 +18,18 @@
 [branch]
     autosetupmerge = true
 
-[credential]
-    helper = osxkeychain
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = true
+
+[color "grep"]
+    filename = 5
+    linenumber = 2
 
 [core]
+    abbrev = 12
     autocrlf = input
     editor = subl -w
     excludesfile = ~/.config/git/ignore
@@ -48,17 +37,17 @@
     pager = diff-so-fancy | less --tabs=4 -RFX # apt install diff-so-fancy | brew install diff-so-fancy
     whitespace = fix,space-before-tab,tab-in-indent,trailing-space
 
-[color]
-    diff = auto
-    status = auto
-    branch = auto
-    ui = true
+[credential]
+    helper = osxkeychain
 
 [diff]
     algorithm = histogram
 
 [format]
     pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset
+
+[grep]
+    lineNumber = true
 
 [hub]
     protocol = https
