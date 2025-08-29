@@ -1,53 +1,87 @@
 #!/usr/bin/env python3
-
 '''
-recursively renames files and folders from the current working dir
-to be more linux friendly
-by removing special characters, accents and spaces
-eg. "rapport télétravail 35.pdf" => "rapport_teletravail_35.pdf"
+Renames files and folders to be more Linux-friendly by:
+- Removing special characters, accents, and spaces.
+- Fails silently; only return code indicates errors.
+- Handles command-line arguments:
+  - No argument: processes the current working directory.
+  - File path: cleans the file.
+  - Folder path: recursively cleans the folder.
 '''
 
 import os
 import re
 import unicodedata
-
+import argparse
+import sys
 
 def clean(input_str):
-    # remove accents, only_ascii
-    nfkd_form = unicodedata.normalize("NFKD", input_str)
-    only_ascii = nfkd_form.encode("ASCII", "ignore")
-    name = str(only_ascii, "utf-8")
-    # replace non alphanumeric caracters by underscore
-    name = re.sub("[^0-9a-zA-Z]+", "_", name).rstrip("_")
-    return name
-
+    """Normalize string: remove accents, keep alphanumeric + underscores."""
+    try:
+        nfkd_form = unicodedata.normalize("NFKD", input_str)
+        only_ascii = nfkd_form.encode("ASCII", "ignore")
+        name = str(only_ascii, "utf-8")
+        name = re.sub("[^0-9a-zA-Z]+", "_", name).rstrip("_")
+        return name
+    except:
+        return input_str  # Fallback to original if cleaning fails
 
 def clean_file(name, path):
-    s = os.path.splitext(name)
-    filename, extension = s[0], s[1]
-    clean_file = clean(filename)
-    base = os.path.dirname(path)
-    new_file = os.path.join(base, f"{clean_file}{extension}")
-    os.rename(path, new_file)
-
+    """Rename a file to its cleaned version."""
+    try:
+        filename, extension = os.path.splitext(name)
+        clean_filename = clean(filename)
+        base = os.path.dirname(path)
+        new_path = os.path.join(base, f"{clean_filename}{extension}")
+        os.rename(path, new_path)
+    except:
+        sys.exit(1)  # Exit with error code if rename fails
 
 def clean_folder(name, path):
-    clean_folder = clean(name)
-    base = os.path.dirname(path)
-    new_folder = os.path.join(base, clean_folder)
-    os.rename(path, new_folder)
-    return new_folder
-
+    """Rename a folder and return its new path."""
+    try:
+        clean_name = clean(name)
+        base = os.path.dirname(path)
+        new_path = os.path.join(base, clean_name)
+        os.rename(path, new_path)
+        return new_path
+    except:
+        sys.exit(1)  # Exit with error code if rename fails
 
 def process_folder(path):
-    for f_name in os.listdir(path):
-        if not f_name.startswith("."):
-            f_path = os.path.join(path, f_name)
-            if os.path.isfile(f_path):
-                clean_file(f_name, f_path)
-            if os.path.isdir(f_path):
-                n = clean_folder(f_name, f_path)
-                process_folder(n)
+    """Recursively clean files and subfolders in the given path."""
+    try:
+        for item in os.listdir(path):
+            if not item.startswith("."):  # Skip hidden files/folders
+                item_path = os.path.join(path, item)
+                if os.path.isfile(item_path):
+                    clean_file(item, item_path)
+                elif os.path.isdir(item_path):
+                    new_path = clean_folder(item, item_path)
+                    process_folder(new_path)
+    except:
+        sys.exit(1)  # Exit with error code if processing fails
 
+def main():
+    parser = argparse.ArgumentParser(description="Rename files/folders to be Linux-friendly.")
+    parser.add_argument("path", nargs="?", default=os.getcwd(),
+                       help="File or folder path (default: current directory)")
+    args = parser.parse_args()
 
-process_folder(os.getcwd())
+    if not os.path.exists(args.path):
+        sys.exit(1)  # Exit with error code if path doesn't exist
+
+    try:
+        if os.path.isfile(args.path):
+            clean_file(os.path.basename(args.path), args.path)
+        elif os.path.isdir(args.path):
+            process_folder(args.path)
+        else:
+            sys.exit(1)  # Exit with error code if path is invalid
+    except:
+        sys.exit(1)  # Exit with error code for any other failure
+
+    sys.exit(0)  # Success
+
+if __name__ == "__main__":
+    main()
