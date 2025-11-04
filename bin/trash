@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# source : https://codeberg.org/EvanHahn/dotfiles
+
+if [[ "$(uname)" == 'Darwin' ]]; then
+  for arg in "$@"; do
+    file="$(realpath "$arg")"
+    /usr/bin/osascript -e "tell application \"Finder\" to delete POSIX file \"$file\"" > /dev/null
+  done
+else
+  gio trash "$@"
+fi
