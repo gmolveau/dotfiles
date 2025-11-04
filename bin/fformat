@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''
+"""
 Renames files and folders to be more Linux-friendly by:
 - Removing special characters, accents, and spaces.
 - Fails silently; only return code indicates errors.
@@ -7,13 +7,14 @@ Renames files and folders to be more Linux-friendly by:
   - No argument: processes the current working directory.
   - File path: cleans the file.
   - Folder path: recursively cleans the folder.
-'''
+"""
 
+import argparse
 import os
 import re
-import unicodedata
-import argparse
 import sys
+import unicodedata
+
 
 def clean(input_str):
     """Normalize string: remove accents, keep alphanumeric + underscores."""
@@ -23,19 +24,24 @@ def clean(input_str):
         name = str(only_ascii, "utf-8")
         name = re.sub("[^0-9a-zA-Z]+", "_", name).rstrip("_")
         return name
-    except:
+    except Exception as e:
         return input_str  # Fallback to original if cleaning fails
 
-def clean_file(name, path):
+
+def clean_file(name, filepath):
     """Rename a file to its cleaned version."""
     try:
         filename, extension = os.path.splitext(name)
         clean_filename = clean(filename)
-        base = os.path.dirname(path)
+        base = os.path.dirname(filepath)
         new_path = os.path.join(base, f"{clean_filename}{extension}")
-        os.rename(path, new_path)
-    except:
+        if new_path == filepath:
+            return filepath
+        else:
+            os.rename(filepath, new_path)
+    except Exception as e:
         sys.exit(1)  # Exit with error code if rename fails
+
 
 def clean_folder(name, path):
     """Rename a folder and return its new path."""
@@ -45,8 +51,9 @@ def clean_folder(name, path):
         new_path = os.path.join(base, clean_name)
         os.rename(path, new_path)
         return new_path
-    except:
+    except Exception as e:
         sys.exit(1)  # Exit with error code if rename fails
+
 
 def process_folder(path):
     """Recursively clean files and subfolders in the given path."""
@@ -59,13 +66,20 @@ def process_folder(path):
                 elif os.path.isdir(item_path):
                     new_path = clean_folder(item, item_path)
                     process_folder(new_path)
-    except:
+    except Exception as e:
         sys.exit(1)  # Exit with error code if processing fails
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Rename files/folders to be Linux-friendly.")
-    parser.add_argument("path", nargs="?", default=os.getcwd(),
-                       help="File or folder path (default: current directory)")
+    parser = argparse.ArgumentParser(
+        description="Rename files/folders to be Linux-friendly."
+    )
+    parser.add_argument(
+        "path",
+        nargs="?",
+        default=os.getcwd(),
+        help="File or folder path (default: current directory)",
+    )
     args = parser.parse_args()
 
     if not os.path.exists(args.path):
@@ -78,10 +92,11 @@ def main():
             process_folder(args.path)
         else:
             sys.exit(1)  # Exit with error code if path is invalid
-    except:
+    except Exception as e:
         sys.exit(1)  # Exit with error code for any other failure
 
     sys.exit(0)  # Success
+
 
 if __name__ == "__main__":
     main()
