@@ -14,6 +14,7 @@ plugins=(
     pip
     poetry
     #rust
+    ssh
     virtualenv
     ## external plugins
     zsh-autosuggestions
