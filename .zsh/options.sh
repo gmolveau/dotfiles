@@ -5,7 +5,8 @@ REPORTTIME=10
 HIST_STAMPS="yyyy-mm-dd"
 HISTSIZE=10000000
 SAVEHIST=10000000
-
+# disable magic widgets such as URL escaping when pasting
+DISABLE_MAGIC_FUNCTIONS=true
 # Don't beep when there are no matches for a command.
 setopt NO_BEEP
 # Don't beep when using the up and down arrow keys to navigate through the command history and there are no more commands to navigate to.

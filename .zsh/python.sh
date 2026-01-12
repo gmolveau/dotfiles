@@ -4,4 +4,6 @@ export PYTHONHISTFILE=${XDG_DATA_HOME}/python/history
 export PYTHONIOENCODING='UTF-8'
 
 export PIP_BIN=${HOME}/.local/bin
-export PATH=${PATH}:${PIP_BIN}
+if [[ ! ":${PATH}:" == *":${PIP_BIN}:"* ]]; then
+    export PATH=${PIP_BIN}:${PATH}
+fi
