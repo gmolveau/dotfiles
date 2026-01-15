@@ -6,15 +6,15 @@ set -o nounset
 
 OS=$(uname)
 if [ "$OS" = "Linux" ]; then
-    sudo apt update
-    INSTALL="sudo apt-get install -y -q"
+    sudo apt-get update
+    INSTALL="sudo apt-get install -y -q --no-install-recommends"
 elif [ "$OS" = "Darwin" ]; then
     INSTALL="brew install"
 fi
 
 ! command -v "git" &> /dev/null && {
     echo "git is not installed."
-    echo "Please install and configure at least the email and the name."
+    echo "Please install and configure at least the email, name and ssh key."
     exit 1
 }
 
@@ -38,10 +38,17 @@ cp ~/.zshrc ~/.zshrc.bck
 
 # install plugins
 for plugin in "zsh-users/zsh-autosuggestions" "zsh-users/zsh-completions" "zsh-users/zsh-syntax-highlighting"; do
+    test -d "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/$(basename $plugin)" && continue
+    echo "Installing plugin: ${plugin}"
     git clone --quiet "https://github.com/${plugin}" "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/$(basename $plugin)"
 done
 
-# clone the repo
+test -d "${HOME}/.dotfiles" && {
+    echo "Dotfiles repo already exists. Exiting to avoid overwriting."
+    exit 1
+}
+
+echo "Cloning dotfiles repo..."
 git clone --bare git@github.com:gmolveau/dotfiles.git "${HOME}/.dotfiles"
 # ignore everything to avoid accidentally committing things
 echo "*" >> "${HOME}/.dotfiles/info/exclude"
