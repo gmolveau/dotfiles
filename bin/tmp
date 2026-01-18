@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# create a temporary dir and cd into it
+cd "$(mktemp -d /tmp/"${1:-}"_XXXX)"

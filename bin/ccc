@@ -3,4 +3,6 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-code ${1:-.}
+# open specified path (or current folder) with vscode
+
+code "${1:-.}"

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# print a shrug and copy it to clipboard
+
+echo -E "¯\_(ツ)_/¯" | tee /dev/tty | pbcopy

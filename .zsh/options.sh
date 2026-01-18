@@ -34,3 +34,10 @@ setopt HIST_REDUCE_BLANKS
 zstyle ':completion:*' special-dirs true
 # Make the completion system case-insensitive when matching files and directories.
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+if [ "$(uname)" = "Linux" ]; then
+    DISTRIB=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+    if [[ "${DISTRIB}" = "Ubuntu"* ]]; then
+        skip_global_compinit=1
+    fi
+fi

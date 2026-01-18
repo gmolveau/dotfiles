@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# open specified path (or current folder) with sublime text
+
+subl "${1:-.}"

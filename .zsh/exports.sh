@@ -18,3 +18,13 @@ export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
 export OLD_PATH=${PATH}
 export USER_BIN=/usr/local/bin:/usr/local/sbin:${HOME}/bin
 export PATH=${PATH}:${USER_BIN}
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    export PIP_BIN="${HOME}/Library/Python/3.10/bin:${HOME}/Library/Python/3.11/bin"
+    export RUBY_BIN=/usr/local/opt/ruby/bin
+    export OPENJDK_BIN=/usr/local/opt/openjdk/bin
+    export HOMEBREW_NO_AUTO_UPDATE=1
+elif [ "$(uname)" = "Linux" ]; then
+    export RUBY_BIN=/usr/bin
+    export OPENJDK_BIN=
+fi

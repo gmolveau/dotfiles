@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# cross-platform copy-to-clipboard
+if [ -f /usr/bin/pbcopy ]; then
+    /usr/bin/pbcopy
+elif grep -qi microsoft /proc/version 2> /dev/null; then
+    clip.exe
+elif command -v xsel &> /dev/null; then
+    xsel --clipboard
+elif command -v xclip &> /dev/null; then
+    xclip -selection clipboard
+elif hash putclip 2>/dev/null; then
+    exec putclip
+fi

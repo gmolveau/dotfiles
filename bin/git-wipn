@@ -4,4 +4,4 @@ set -o pipefail
 set -o nounset
 
 git add -u
-git commit --message "wip"
+git commit --no-verify --message "wip"

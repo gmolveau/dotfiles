@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# freeze/list all installed apps, tools and deps
+
+function common_freeze() {
+    echo "# golang apps"
+    ls -1 "${GOBIN}"
+
+    echo "# cargo apps"
+    cargo install --list
+
+    echo "# npm apps"
+    npm list -g --depth=0
+
+    if [ -d "${HOME}/bin" ]; then
+        echo "# user bin"
+        ls -1 "${HOME}/bin"
+    fi
+}
+
+function linux_freeze() {
+    echo "# apt-get packages"
+    python3 -c "from apt import cache;manual = set(pkg for pkg in cache.Cache() if pkg.is_installed and not pkg.is_auto_installed);depends = set(dep_pkg.name for pkg in manual for dep in pkg.installed.get_dependencies('PreDepends', 'Depends', 'Recommends') for dep_pkg in dep);print('\n'.join(pkg.name for pkg in manual if pkg.name not in depends))"
+
+    echo "# snap packages"
+    snap list | grep -v Publisher | grep -v canonical | awk '{print $1}'
+}
+
+function macos_freeze() {
+    echo "# /Applications"
+    ls -1 /Applications
+
+    echo "# ~/Applications"
+    ls -1 ~/Applications
+
+    echo "# Mac App Store apps"
+    mas list | sed 's/ / # /'
+
+    echo "# brew apps"
+    brew leaves
+}
+
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    macos_freeze
+else
+    linux_freeze
+fi
+common_freeze

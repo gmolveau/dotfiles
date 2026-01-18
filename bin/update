@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# updates system and others tools
+
+function common_update() {
+    echo "updating uv ..."
+    uv self update
+
+    echo "updating rust ..."
+    rustup self update
+    cargo update
+}
+
+function macos_update() {
+    deactivate 2> /dev/null
+    echo "updating brew ..."
+    brew update
+    echo "upgrading brew ..."
+    brew upgrade
+    echo "cleaning brew ..."
+    brew cleanup -s
+    #now diagnotic
+    brew doctor
+    brew missing
+
+    echo "updating app store apps ..."
+    mas upgrade
+}
+
+function linux_update() {
+    deactivate 2> /dev/null
+    sudo apt-get update -y
+    sudo apt-get upgrade -y
+    sudo apt-get dist-upgrade -y
+    echo "updating npm"
+    npm update -g
+}
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    macos_update
+else
+    linux_update
+fi
+common_update

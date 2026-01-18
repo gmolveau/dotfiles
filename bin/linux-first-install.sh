@@ -15,11 +15,13 @@ sudo apt-get upgrade -y
 
 # basic tools
 "${INSTALL}" \
-    tree \
+    tree fzf zip \
     git \
     curl wget \
     nano vim \
-    terminator
+    terminator \
+    ghostscript \
+    ffmpeg
 
 # tmux
 "${INSTALL}" tmux

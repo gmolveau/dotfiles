@@ -3,5 +3,5 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-git add -u
-git commit --message "wip"
+# nicely print the PATH
+echo "$PATH" | tr : "\n" | uniq

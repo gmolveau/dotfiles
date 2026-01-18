@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# open (file browser) current folder or specified folder/file
+
+open "${1:-.}"

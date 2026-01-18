@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# open the file browser on macos, WSL, linux
+
+if [ -f /usr/bin/open ]; then
+    /usr/bin/open "$@"
+elif grep -qi microsoft /proc/version 2> /dev/null; then
+    explorer.exe "$@"
+else
+    xdg-open "$@"
+fi
