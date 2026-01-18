@@ -5,42 +5,65 @@ set -o nounset
 
 # freeze/list all installed apps, tools and deps
 
+OUTPUT=${OUTPUT:-}
+
+output() {
+    local filename="$1"
+    if [ -n "${OUTPUT}" ]; then
+        tee "${OUTPUT}/${filename}"
+    else
+        tee
+    fi
+}
+
+list_dir() {
+    find "$1" -maxdepth 1 -exec basename {} \;
+}
+
 function common_freeze() {
+    echo
     echo "# golang apps"
-    ls -1 "${GOBIN}"
+    list_dir "${GOBIN}" | output "golang-apps.txt"
 
+    echo
     echo "# cargo apps"
-    cargo install --list
+    cargo install --list | output "cargo-apps.txt"
 
+    echo
     echo "# npm apps"
-    npm list -g --depth=0
+    npm list -g --depth=0 | output "npm-apps.txt"
 
     if [ -d "${HOME}/bin" ]; then
+        echo
         echo "# user bin"
-        ls -1 "${HOME}/bin"
+        list_dir "${HOME}/bin" | output "user-bin.txt"
     fi
 }
 
 function linux_freeze() {
     echo "# apt-get packages"
-    python3 -c "from apt import cache;manual = set(pkg for pkg in cache.Cache() if pkg.is_installed and not pkg.is_auto_installed);depends = set(dep_pkg.name for pkg in manual for dep in pkg.installed.get_dependencies('PreDepends', 'Depends', 'Recommends') for dep_pkg in dep);print('\n'.join(pkg.name for pkg in manual if pkg.name not in depends))"
+    python3 -c "from apt import cache;manual = set(pkg for pkg in cache.Cache() if pkg.is_installed and not pkg.is_auto_installed);depends = set(dep_pkg.name for pkg in manual for dep in pkg.installed.get_dependencies('PreDepends', 'Depends', 'Recommends') for dep_pkg in dep);print('\n'.join(pkg.name for pkg in manual if pkg.name not in depends))" | output "apt-get-apps.txt"
 
     echo "# snap packages"
-    snap list | grep -v Publisher | grep -v canonical | awk '{print $1}'
+    snap list | grep -v Publisher | grep -v canonical | awk '{print $1}' | output "snap-apps.txt"
 }
 
 function macos_freeze() {
+    echo
     echo "# /Applications"
-    ls -1 /Applications
+    list_dir /Applications | output "root_applications.txt"
 
+    echo
     echo "# ~/Applications"
-    ls -1 ~/Applications
+    list_dir ~/Applications | output "home_applications.txt"
 
+    echo
     echo "# Mac App Store apps"
-    mas list | sed 's/ / # /'
+    mas list | sed 's/^ */* /' | output "macappstore-apps.txt"
 
+    echo
     echo "# brew apps"
-    brew leaves
+    brew leaves | output "brew-apps.txt"
 }
 
 

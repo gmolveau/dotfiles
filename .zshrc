@@ -15,8 +15,6 @@ source "${HOME}/.zsh/rust.sh"
 source "${HOME}/.zsh/go.sh"
 source "${HOME}/.zsh/node.sh"
 source "${HOME}/.zsh/sqlite.sh"
-source "${HOME}/.zsh/vscode.sh"
-source "${HOME}/.zsh/sublime.sh"
 source "${HOME}/.zsh/ruby.sh"
 [ -f "${HOME}/.zsh/work.sh" ] && source "${HOME}/.zsh/work.sh"
 

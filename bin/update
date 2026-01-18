@@ -15,14 +15,13 @@ function common_update() {
 }
 
 function macos_update() {
-    deactivate 2> /dev/null
+    deactivate 2> /dev/null || true
     echo "updating brew ..."
     brew update
     echo "upgrading brew ..."
     brew upgrade
     echo "cleaning brew ..."
     brew cleanup -s
-    #now diagnotic
     brew doctor
     brew missing
 

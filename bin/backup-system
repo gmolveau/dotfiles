@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+function common_backup() {
+    OUTPUT="${BACKUP_PATH}" freeze
+
+    echo "backing up : ssh keys"
+    cp -R ~/.ssh "${BACKUP_PATH}/ssh"
+
+    # checking dirty git repositories
+    find ~ -name .git -type d -prune 2> /dev/null | while read -r d; do
+        (
+            cd "${d}/.." \
+                && ([ -z "$(git status -s)" ] || echo "$PWD:" repo is not clean)
+        )
+    done
+
+    # dev
+    echo "list and backup : ~/dev"
+    tar -cf "${BACKUP_PATH}/dev.tar" -C ~/dev .
+    ls ~/dev > "${BACKUP_PATH}/dev.list.txt"
+}
+
+function macos_backup() {
+    echo "listing : applications"
+    freeze >"${BACKUP_PATH}/apps.txt"
+
+    echo "taking screenshot"
+    screencapture "${BACKUP_PATH}/screenshot.png"
+}
+
+function linux_backup() {
+    scrot "${BACKUP_PATH}/screenshot.png"
+}
+
+TODAY=$(date '+%Y_%m_%d')
+BACKUP_NAME="backup_${TODAY}"
+read -e -r -p "Enter full-path where you want your backup stored: " BACKUP_FOLDER
+mkdir -p "${BACKUP_FOLDER}"
+BACKUP_PATH="${BACKUP_FOLDER}/${BACKUP_NAME}"
+if [ -d "${BACKUP_PATH}" ]; then
+    echo "Folder ${BACKUP_PATH} already exist"
+    exit 2
+fi
+mkdir -p "${BACKUP_PATH}"
+
+common_backup
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    macos_backup
+else
+    linux_backup
+fi
