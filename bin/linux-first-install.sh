@@ -15,8 +15,8 @@ sudo apt-get upgrade -y
 
 # basic tools
 "${INSTALL}" \
-    tree fzf zip \
-    git \
+    tree zip \
+    scrot gparted \
     curl wget \
     nano vim \
     terminator \

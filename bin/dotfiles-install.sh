@@ -37,6 +37,7 @@ test -d ~/.oh-my-zsh || {
 cp ~/.zshrc ~/.zshrc.bck
 
 # install plugins
+# todo list the plugins from the ~/.zsh/plugins.sh
 for plugin in "zsh-users/zsh-autosuggestions" "zsh-users/zsh-completions" "zsh-users/zsh-syntax-highlighting"; do
     test -d "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/$(basename $plugin)" && continue
     echo "Installing plugin: ${plugin}"
