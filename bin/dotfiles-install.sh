@@ -59,6 +59,6 @@ ${dotfiles} config --local status.showUntrackedFiles no
 ${dotfiles} checkout -f
 
 # switch to zsh
-chsh -s $(which zsh)
+sudo chsh -s "$(which zsh)" "$(whoami)"
 
 echo "Please reboot"
