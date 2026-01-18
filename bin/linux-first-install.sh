@@ -36,7 +36,7 @@ install tmux
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # ssh
-ssh-keygen -q -C "" -N "" -t ed25519 -f ~/.ssh/id_ed25519
+[ ! -f ~/.ssh/id_ed25519 ] && ssh-keygen -q -C "" -N "" -t ed25519 -f ~/.ssh/id_ed25519
 
 # 1Password
 install gnupg2
