@@ -14,14 +14,20 @@ sudo apt-get update -y
 sudo apt-get upgrade -y
 
 # basic tools
-"${INSTALL}" \
-    tree zip \
-    scrot gparted \
-    curl wget \
-    nano vim \
-    terminator \
-    ghostscript \
+BASIC_TOOLS=(
+    tree
+    zip
+    scrot
+    gparted
+    curl
+    wget
+    nano
+    vim
+    terminator
+    ghostscript
     ffmpeg
+)
+"${INSTALL}" "${BASIC_TOOLS[@]}"
 
 # tmux
 "${INSTALL}" tmux
