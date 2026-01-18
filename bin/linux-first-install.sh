@@ -33,7 +33,7 @@ install "${BASIC_TOOLS[@]}"
 
 # tmux
 install tmux
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+[ ! -d ~/.tmux/plugins/tpm ] && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 # ssh
 [ ! -f ~/.ssh/id_ed25519 ] && ssh-keygen -q -C "" -N "" -t ed25519 -f ~/.ssh/id_ed25519
@@ -57,6 +57,7 @@ sudo apt-get update -y && install signal-desktop
 # docker
 curl -fsSL https://get.docker.com -o /tmp/get-docker.sh
 sudo sh /tmp/get-docker.sh
+rm /tmp/get-docker.sh
 
 # python
 install python3-dev python3-venv
@@ -65,6 +66,7 @@ install python3-dev python3-venv
 curl -sL https://deb.nodesource.com/setup_24.x -o /tmp/nodesource_setup.sh
 sudo bash /tmp/nodesource_setup.sh
 install nodejs
+rm /tmp/nodesource_setup.sh
 
 # databases
 install sqlitebrowser postgresql-client
