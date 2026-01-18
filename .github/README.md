@@ -2,13 +2,15 @@
 
 ## Getting started on a new machine
 
+Please install `git` and configure your name, email and SSH public key first.
+
 ```sh
 curl -Ls https://raw.github.com/gmolveau/dotfiles/main/bin/dotfiles-install.sh | bash
 ```
 
 ## How does it work ?
 
-Using a shell alias `dotfiles` that specifies the git tracked folder, we can commit files and folders that are in `$HOME`.
+Using a `dotfiles` script that specifies the git tracked folder, we can commit files and folders that are in `$HOME`.
 
 - To start your own dotfiles tracking :
 
