@@ -4,5 +4,5 @@ export NODE_BIN=${HOME}/.local/bin
 export NODE_REPL_HISTORY="${XDG_STATE_HOME}/node_repl_history"
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 if [[ ! ":${PATH}:" == *":${NODE_BIN}:"* ]]; then
-    export PATH=${NODE_BIN}:${PATH}
+    export PATH="${PATH}:${NODE_BIN}"
 fi

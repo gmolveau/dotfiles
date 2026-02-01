@@ -5,5 +5,5 @@ export PYTHONIOENCODING='UTF-8'
 
 export PIP_BIN=${HOME}/.local/bin
 if [[ ! ":${PATH}:" == *":${PIP_BIN}:"* ]]; then
-    export PATH=${PIP_BIN}:${PATH}
+    export PATH="${PATH}:${PIP_BIN}"
 fi
