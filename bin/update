@@ -6,6 +6,7 @@ set -o nounset
 # updates system and others tools
 
 function common_update() {
+    [[ -n "${VIRTUAL_ENV:-}" ]] && deactivate
     echo "updating uv ..."
     uv self update
 
@@ -15,7 +16,6 @@ function common_update() {
 }
 
 function macos_update() {
-    deactivate 2> /dev/null || true
     echo "updating brew ..."
     brew update
     echo "upgrading brew ..."
@@ -30,7 +30,6 @@ function macos_update() {
 }
 
 function linux_update() {
-    deactivate 2> /dev/null
     sudo apt-get update -y
     sudo apt-get upgrade -y
     sudo apt-get dist-upgrade -y
