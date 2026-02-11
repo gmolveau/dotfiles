@@ -18,6 +18,7 @@ export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
 export OLD_PATH=${PATH}
 export USER_BIN=/usr/local/bin:/usr/local/sbin:${HOME}/bin
 export PATH=${PATH}:${USER_BIN}
+unalias ll
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
     export PIP_BIN="${HOME}/Library/Python/3.10/bin:${HOME}/Library/Python/3.11/bin"

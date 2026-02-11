@@ -3,4 +3,8 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-ls -alh "${@:-.}"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    ls -alhG "${@:-.}"
+else
+    ls -alh --color=auto "${@:-.}"
+fi
