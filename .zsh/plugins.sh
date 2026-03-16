@@ -14,11 +14,10 @@ plugins=(
     golang
     #httpie
     python
-    pip
     rust
     ssh
     uv
-    virtualenv
+    better-virtualenv
     ## external plugins
     zsh-autosuggestions
     zsh-completions
