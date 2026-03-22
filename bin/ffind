@@ -3,4 +3,13 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-sk --ansi -i -c 'ag --color \"{}\"' --bind 'ctrl-p:execute-silent(subl {1})+accept,ctrl-y:execute(preview.sh {}),command-c:execute(echo {} | pbcopy)'
+# ffind = file-find
+
+! command -v "fzf" &> /dev/null && (
+    echo "fzf is not installed"
+    echo "please install with : "
+    echo "$ brew install fzf"
+    echo "$ apt-get install fzf"
+    exit 1
+)
+find . -type f | fzf
