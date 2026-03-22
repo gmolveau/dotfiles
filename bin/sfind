@@ -15,11 +15,13 @@ if command -v bat >/dev/null 2>&1; then
     rg "" --line-number . | fzf --delimiter ":" \
     --preview "bat --highlight-line {2} {1}" \
     --bind "change:reload:rg {q} --line-number . || true" \
-    --bind "ctrl-c:execute(echo {1} | pbcopy)" \
+    --bind "ctrl-c:execute(echo {1} | pbcopy)+abort" \
     --bind "ctrl-d:abort"
 else
     rg "" --line-number . | fzf --delimiter ":" \
     --bind "change:reload:rg {q} --line-number . || true" \
-    --bind "ctrl-c:execute(echo {1} | pbcopy)" \
+    --bind "ctrl-o:execute(open -R {1})" \
+    --bind "ctrl-e:execute(ccc {1})" \
+    --bind "ctrl-x:execute(ooo {1})" \
     --bind "ctrl-d:abort"
 fi

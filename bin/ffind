@@ -12,4 +12,9 @@ set -o nounset
     echo "$ apt-get install fzf"
     exit 1
 )
-find . -type f | fzf
+find . -type f | fzf \
+    --bind "ctrl-c:execute(echo {1} | pbcopy)+abort" \
+    --bind "ctrl-o:execute(open -R {1})" \
+    --bind "ctrl-e:execute(ccc {1})" \
+    --bind "ctrl-x:execute(ooo {1})" \
+    --bind "ctrl-d:abort"
