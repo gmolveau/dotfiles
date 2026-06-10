@@ -16,7 +16,8 @@ export NETRC=${XDG_CONFIG_HOME}/inetutils/netrc
 export SCREENRC="${XDG_CONFIG_HOME}/screen/screenrc"
 export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
 export OLD_PATH=${PATH}
-export USER_BIN=/usr/local/bin:/usr/local/sbin:${HOME}/bin
+export LOCAL_BIN="${HOME}/.local/bin"
+export USER_BIN=/usr/local/bin:/usr/local/sbin:${LOCAL_BIN}:${HOME}/bin
 export PATH=${PATH}:${USER_BIN}
 unalias ll
 

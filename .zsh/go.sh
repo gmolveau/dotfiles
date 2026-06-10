@@ -1,3 +1,5 @@
 export GOPATH=${HOME}/go
 export GOBIN=${GOPATH}/bin
-export PATH=${PATH}:${GOBIN}
+if [[ ! ":${PATH}:" == *":${GOBIN}:"* ]]; then
+    export PATH="${PATH}:${GOBIN}"
+fi

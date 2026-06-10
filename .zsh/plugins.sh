@@ -35,4 +35,5 @@ if [ "$OS" = "Linux" ]; then
 elif [ "$OS" = "Darwin" ]; then
     plugins+=(brew)
     plugins+=(macos)
+    source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 fi

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# create a fresh working folder under a stable base and run claude there with edits allowed
+# trust the base folder once (manually); subfolders inherit trust, so no prompt per run
+
+base="${HOME}/.local/share/askclaude"
+mkdir -p "${base}"
+
+workdir=$(mktemp -d "${base}/askc.XXXXXX")
+
+echo "askc: working in ${workdir}"
+
+cd "${workdir}"
+exec claude --permission-mode acceptEdits "$@"
