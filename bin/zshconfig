@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+code "${HOME}/.zsh"
+code "${HOME}/.zshrc"
