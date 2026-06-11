@@ -9,6 +9,13 @@ set -o nounset
 base="${HOME}/.local/share/askclaude"
 mkdir -p "${base}"
 
+# --purge: remove all working folders under the base and exit
+if [[ "${1:-}" == "--purge" ]]; then
+	rm -rf "${base:?}"/askc.*
+	echo "askc: purged all working folders under ${base}"
+	exit 0
+fi
+
 workdir=$(mktemp -d "${base}/askc.XXXXXX")
 
 echo "askc: working in ${workdir}"
