@@ -1,9 +1,10 @@
 [global_config]
-  suppress_multiple_term_dialog = True
 [keybindings]
 [profiles]
   [[default]]
+    font = Roboto Mono 11
     scrollback_infinite = True
+    use_system_font = False
 [layouts]
   [[default]]
     [[[window0]]]
