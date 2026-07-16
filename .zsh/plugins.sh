@@ -38,3 +38,5 @@ elif [ "$OS" = "Darwin" ]; then
     plugins+=(macos)
     source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 fi
+
+source <(just --completions zsh)
