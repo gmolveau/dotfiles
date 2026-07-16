@@ -12,6 +12,7 @@ plugins=(
     git
     git-auto-fetch
     golang
+    kubectl
     #httpie
     python
     rust
