@@ -3,6 +3,4 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# open zshrc and zsh folder with vscode
-
-code ~/.zsh ~/.zshrc
+/bin/cp -iv "$@"

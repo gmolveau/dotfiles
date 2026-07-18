@@ -9,6 +9,7 @@ function common_update() {
     [[ -n "${VIRTUAL_ENV:-}" ]] && deactivate
     echo "updating uv ..."
     uv self update
+    uv tool upgrade --all
 
     echo "updating rust ..."
     rustup self update

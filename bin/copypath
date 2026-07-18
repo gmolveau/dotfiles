@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# Copy the absolute path of a file or directory to the clipboard.
+# Copies the current directory if no argument is given.
+# Symlinks are not resolved.
+
+file="${1:-.}"
+
+# If not already absolute, prepend $PWD
+[[ $file = /* ]] || file="$PWD/$file"
+
+# Normalise trailing "/." and "." without resolving symlinks
+file="${file%/.}"
+
+printf '%s' "$file" | pbcopy
+
+echo "$file copied to clipboard."

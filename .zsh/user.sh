@@ -1,5 +1,3 @@
-ZSH_THEME="gregouz"
-
 function tmp() {
-    cd "$(mktemp -d /tmp/"${1:-}"_XXXX)" || return
+    cd "$(mktemp -d "${TMPDIR:-/tmp}/${1:-}_XXXX")" || return
 }

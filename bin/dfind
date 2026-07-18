@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# dfind = directory-find
+
+! command -v "fzf" &> /dev/null && (
+    echo "fzf is not installed"
+    echo "please install with : "
+    echo "$ brew install fzf"
+    echo "$ apt-get install fzf"
+    exit 1
+)
+find . -type d | fzf \
+    --bind "ctrl-c:execute(echo {1} | pbcopy)+abort" \
+    --bind "ctrl-o:execute(open -R {1})" \
+    --bind "ctrl-e:execute(ccc {1})" \
+    --bind "ctrl-x:execute(ooo {1})" \
+    --bind "ctrl-d:abort"

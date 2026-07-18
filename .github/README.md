@@ -8,6 +8,14 @@ Please install `git` and configure your name, email and SSH public key first.
 curl -Ls https://raw.github.com/gmolveau/dotfiles/main/bin/dotfiles-install.sh | bash
 ```
 
+The installer clones the dotfiles, then clones the git-backed zsh plugins
+(`zsh-autosuggestions`, `zsh-completions`, `zsh-syntax-highlighting`) into
+`~/.zsh/plugins/`. This setup no longer uses oh-my-zsh: external plugins are
+sourced directly from `~/.zsh/plugins/` in `.zshrc`.
+
+To update the git-backed plugins later, run `zsh-plugins-update` (defined in
+`~/.zsh/plugins.sh`).
+
 ## How does it work ?
 
 Using a `dotfiles` script that specifies the git tracked folder, we can commit files and folders that are in `$HOME`.
@@ -28,5 +36,5 @@ dotfiles remote add origin <your_git_url>
 # add the files (`-f` to force add as we exclude everything)
 dotfiles add -f .zshrc
 dotfiles commit -m "add zshrc"
-dotfiles push -u origin master
+dotfiles push -u origin main
 ```

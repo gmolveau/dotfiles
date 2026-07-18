@@ -10,6 +10,9 @@ if [ "$OS" = "Linux" ]; then
     INSTALL="sudo apt-get install -y -q --no-install-recommends"
 elif [ "$OS" = "Darwin" ]; then
     INSTALL="brew install"
+else
+    echo "Unsupported OS: ${OS}"
+    exit 1
 fi
 
 ! command -v "git" &> /dev/null && {
@@ -28,22 +31,10 @@ fi
     ${INSTALL} fzf
 }
 
-test -d ~/.oh-my-zsh || {
-    echo "oh-my-zsh is not installed. Installing..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-}
+# backup existing zshrc, if any, just in case
+test -f ~/.zshrc && cp ~/.zshrc ~/.zshrc.bck
 
-# backup zshrc config just in case
-cp ~/.zshrc ~/.zshrc.bck
-
-# install plugins
-# todo list the plugins from the ~/.zsh/plugins.sh
-for plugin in "zsh-users/zsh-autosuggestions" "zsh-users/zsh-completions" "zsh-users/zsh-syntax-highlighting"; do
-    test -d "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/$(basename $plugin)" && continue
-    echo "Installing plugin: ${plugin}"
-    git clone --quiet "https://github.com/${plugin}" "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/$(basename $plugin)"
-done
-
+# clone the dotfiles first so ~/.zsh/ (config + copied plugins) exists
 test -d "${HOME}/.dotfiles" && {
     echo "Dotfiles repo already exists. Exiting to avoid overwriting."
     exit 1
@@ -57,6 +48,15 @@ echo "*" >> "${HOME}/.dotfiles/info/exclude"
 dotfiles="/usr/bin/git --git-dir=${HOME}/.dotfiles/ --work-tree=${HOME}"
 ${dotfiles} config --local status.showUntrackedFiles no
 ${dotfiles} checkout -f
+
+# install the git-backed plugins into ~/.zsh/plugins/ (oh-my-zsh no longer used)
+mkdir -p "${HOME}/.zsh/plugins"
+for plugin in "zsh-users/zsh-autosuggestions" "zsh-users/zsh-completions" "zsh-users/zsh-syntax-highlighting"; do
+    dest="${HOME}/.zsh/plugins/$(basename "${plugin}")"
+    test -d "${dest}" && continue
+    echo "Installing plugin: ${plugin}"
+    git clone --quiet "https://github.com/${plugin}" "${dest}"
+done
 
 # switch to zsh
 sudo chsh -s "$(which zsh)" "$(whoami)"

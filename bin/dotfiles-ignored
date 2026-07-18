@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# List files and folders that are NOT committed to the dotfiles repo
+# (untracked) within ~/.zsh and ~/bin.
+#
+# The dotfiles use a bare-repo layout (git-dir ~/.dotfiles, work-tree $HOME)
+# with an "ignore everything, whitelist what you add" info/exclude. Because of
+# that whitelist model, --exclude-standard would hide *everything*, so we
+# deliberately don't use it: here "not committed" simply means untracked.
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+git_dir="${HOME}/.dotfiles/"
+
+# Run from $HOME so pathspecs resolve against the work-tree root.
+dotgit() {
+    /usr/bin/git -C "${HOME}" --git-dir="${git_dir}" --work-tree="${HOME}" "$@"
+}
+
+# Paths to inspect, relative to $HOME.
+paths=(".zsh" "bin")
+
+for path in "${paths[@]}"; do
+    printf '=== ~/%s ===\n' "${path}"
+
+    # --others     : untracked files
+    # --directory  : collapse a wholly-untracked dir into a single entry (trailing /)
+    dotgit ls-files --others --directory -- "${path}" \
+        | sed 's#^#~/#' \
+        || true
+
+    printf '\n'
+done

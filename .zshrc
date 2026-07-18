@@ -1,30 +1,36 @@
-# uncomment next line to enable profiling
+# uncomment next line (and `zprof` at the very bottom) to profile startup
 # zmodload zsh/zprof
 
-export ZSH=${HOME}/.oh-my-zsh
-source "${HOME}/.zsh/user.sh"
-source "${HOME}/.zsh/plugins.sh"
-[ -f "${HOME}/.zsh/custom.sh" ] && source "${HOME}/.zsh/custom.sh"
-source "${HOME}/.zsh/options.sh"
-source "${ZSH}/oh-my-zsh.sh"
-source "${HOME}/.zsh/exports.sh"
-source "${HOME}/.zsh/nextcloud.sh"
-source "${HOME}/.zsh/archive.sh"
-source "${HOME}/.zsh/python.sh"
-source "${HOME}/.zsh/rust.sh"
-source "${HOME}/.zsh/go.sh"
-source "${HOME}/.zsh/node.sh"
-source "${HOME}/.zsh/sqlite.sh"
-source "${HOME}/.zsh/ruby.sh"
-[ -f "${HOME}/.zsh/work.sh" ] && source "${HOME}/.zsh/work.sh"
+ZSH_ROOT="${HOME}/.zsh"
 
-autoload -Uz compinit
-# speed improvement: only load zcompdump once a day
-if [[ ! -f ~/.zcompdump ]] || [[ $(find ~/.zcompdump -mtime +1 2>/dev/null) ]]; then
-  compinit
-else
-  compinit -C
-fi
+# --- prompt requirements ---
+autoload -U colors && colors
+setopt PROMPT_SUBST
 
-# uncomment next line to enable profiling
+# --- config modules ---
+source "${ZSH_ROOT}/user.sh"
+[ -f "${ZSH_ROOT}/custom.sh" ] && source "${ZSH_ROOT}/custom.sh"
+source "${ZSH_ROOT}/options.sh"
+source "${ZSH_ROOT}/lib/spectrum.zsh"
+source "${ZSH_ROOT}/lib/git-prompt.zsh"
+source "${ZSH_ROOT}/exports.sh"
+source "${ZSH_ROOT}/fzf.sh"
+source "${ZSH_ROOT}/nextcloud.sh"
+source "${ZSH_ROOT}/archive.sh"
+source "${ZSH_ROOT}/python.sh"
+source "${ZSH_ROOT}/rust.sh"
+source "${ZSH_ROOT}/go.sh"
+source "${ZSH_ROOT}/node.sh"
+source "${ZSH_ROOT}/sqlite.sh"
+source "${ZSH_ROOT}/ruby.sh"
+[ -f "${ZSH_ROOT}/work.sh" ] && source "${ZSH_ROOT}/work.sh"
+source "${ZSH_ROOT}/gregouz.zsh-theme"
+
+# --- completions: fpath + compinit + zsh-completions-update ---
+source "${ZSH_ROOT}/completions.sh"
+
+# --- plugins (after completions) ---
+source "${ZSH_ROOT}/plugins.sh"
+
+# uncomment to profile startup (see top of file)
 # zprof

@@ -16,7 +16,18 @@ if [[ "${1:-}" == "--purge" ]]; then
 	exit 0
 fi
 
-workdir=$(mktemp -d "${base}/askc.XXXXXX")
+# --name <session>: use a named working folder instead of a random one
+if [[ "${1:-}" == "--name" ]]; then
+	if [[ -z "${2:-}" ]]; then
+		echo "askc: --name requires a session name" >&2
+		exit 1
+	fi
+	workdir="${base}/${2}"
+	mkdir -p "${workdir}"
+	shift 2
+else
+	workdir=$(mktemp -d "${base}/askc.XXXXXX")
+fi
 
 echo "askc: working in ${workdir}"
 

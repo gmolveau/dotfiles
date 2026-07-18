@@ -1,42 +1,21 @@
-# ohmyzsh plugins : https://github.com/ohmyzsh/ohmyzsh/wiki/plugins
-plugins=(
-    colorize
-    colored-man-pages
-    copybuffer
-    copyfile
-    copypath
-    #command-not-found # warning : increase zsh load time
-    docker
-    #docker-compose
-    fzf
-    git
-    git-auto-fetch
-    golang
-    kubectl
-    #httpie
-    python
-    rust
-    ssh
-    uv
-    better-virtualenv
-    ## external plugins
-    zsh-autosuggestions
-    zsh-completions
-    zsh-syntax-highlighting
-)
-
-OS=$(uname)
-if [ "$OS" = "Linux" ]; then
-    DISTRIB=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
-    if [[ "${DISTRIB}" = "Ubuntu"* ]]; then
-        plugins+=(ubuntu)
-    elif [[ "${DISTRIB}" = "Debian"* ]]; then
-        plugins+=(debian)
-    fi
-elif [ "$OS" = "Darwin" ]; then
-    plugins+=(brew)
-    plugins+=(macos)
-    source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+# shellcheck shell=bash disable=SC1090,SC1091  # sourced by zsh; closest target shellcheck supports
+source "${ZSH_ROOT}/lib/compat.zsh"
+source "${ZSH_ROOT}/plugins/better-virtualenv/better-virtualenv.plugin.zsh"
+source "${ZSH_ROOT}/plugins/colored-man-pages/colored-man-pages.plugin.zsh"
+source "${ZSH_ROOT}/plugins/copybuffer/copybuffer.plugin.zsh"
+if [[ "$OSTYPE" == darwin* ]]; then
+  source "${ZSH_ROOT}/plugins/macos/macos.plugin.zsh"
+  source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 fi
+source "${ZSH_ROOT}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# syntax-highlighting MUST be sourced last
+source "${ZSH_ROOT}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-source <(just --completions zsh)
+# Update the git-backed plugins under ~/.zsh/plugins
+zsh-plugins-update() {
+  for d in ~/.zsh/plugins/*/; do
+    [ -d "${d}.git" ] || continue
+    echo "== $(basename "$d") =="
+    git -C "$d" pull --ff-only
+  done
+}
