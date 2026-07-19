@@ -3,6 +3,6 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# open specified path (or current folder) with vscode
+# open specified path (or current folder) with IDE (default: code)
 
-code "${1:-.}"
+${IDE:-code} "${1:-.}"

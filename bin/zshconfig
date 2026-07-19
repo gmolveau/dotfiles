@@ -3,6 +3,6 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# open zshrc and zsh folder with vscode
+# open zshrc and zsh folder with IDE (default: code)
 
-code ~/.zsh ~/.zshrc
+${IDE:-code} ~/.zsh ~/.zshrc

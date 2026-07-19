@@ -1,1 +1,1 @@
-source <(fzf --zsh)
+command -v fzf >/dev/null && source <(fzf --zsh)

@@ -3,11 +3,18 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# find a file by name in a specified directory or in cwd
+# find a file by name (glob) in a specified directory or in cwd
+# usage: f <name-or-glob> [dir]
 
-arg1="${1:-.}"
-if [ ! -d "${arg1}" ]; then
-    echo "${arg1} is not a directory"
-    exit
+if [ $# -eq 0 ]; then
+    echo "usage: f <name-or-glob> [dir]"
+    exit 1
 fi
-find . -name "${arg1}"
+
+dir="${2:-.}"
+if [ ! -d "${dir}" ]; then
+    echo "${dir} is not a directory"
+    exit 1
+fi
+
+find "${dir}" -name "${1}"

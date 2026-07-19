@@ -27,6 +27,10 @@ export NETRC="${XDG_CONFIG_HOME}/inetutils/netrc"
 export SCREENRC="${XDG_CONFIG_HOME}/screen/screenrc"
 export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
 
+export IDE="zed"
+export EDITOR="zed --wait"
+export VISUAL="$EDITOR"
+
 # base bin dirs (typeset -U keeps these unique / correctly ordered)
 path+=(/usr/local/bin /usr/local/sbin "${HOME}/.local/bin" "${HOME}/bin")
 unalias ll 2>/dev/null || true  # was removing oh-my-zsh's default ll alias

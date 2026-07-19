@@ -4,4 +4,11 @@ set -o pipefail
 set -o nounset
 
 # print the files and lines where a text is found in current dir
-grep -rnw "." -e "$@"
+# usage: findtext <text>   (quote multi-word patterns)
+
+if [ $# -eq 0 ]; then
+    echo "usage: findtext <text>"
+    exit 1
+fi
+
+grep -rn "." -e "$1"

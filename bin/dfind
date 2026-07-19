@@ -5,13 +5,13 @@ set -o nounset
 
 # dfind = directory-find
 
-! command -v "fzf" &> /dev/null && (
+if ! command -v fzf &> /dev/null; then
     echo "fzf is not installed"
     echo "please install with : "
     echo "$ brew install fzf"
     echo "$ apt-get install fzf"
     exit 1
-)
+fi
 find . -type d | fzf \
     --bind "ctrl-c:execute(echo {1} | pbcopy)+abort" \
     --bind "ctrl-o:execute(open -R {1})" \
