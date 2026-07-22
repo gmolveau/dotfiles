@@ -2,14 +2,14 @@
     c = commit -m
     amend = commit --amend
     g = grep --break --heading --line-number
-    log = log --graph --abrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
-    l = log
+    lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all
     ls = ls-files
     s = status
     sup = !git submodule sync && git submodule update --init
     tree = log --graph --pretty=format:'%C(auto)%h - %s [%an] (%C(blue)%ar)%C(auto)%d'
-    undo = reset --soft --keep HEAD^
-    untrack = update-index --assume-unchanged
+    untrack = update-index --skip-worktree
+    retrack = update-index --no-skip-worktree
+    untracked = !git ls-files -v | grep '^S'
     zip = archive -o latest.zip HEAD
 
 [apply]
@@ -33,7 +33,6 @@
     autocrlf = input
     editor = subl -w
     excludesfile = ~/.config/git/ignore
-    hooksPath = .githooks
     pager = diff-so-fancy | less --tabs=4 -RFX # apt install diff-so-fancy | brew install diff-so-fancy
     whitespace = fix,space-before-tab,tab-in-indent,trailing-space
 
@@ -56,7 +55,8 @@
     date = iso
 
 [merge]
-    tool = meld # apt install meld | brew cask install meld
+    # apt install meld | brew cask install meld
+    tool = meld
 
 [push]
     default = current

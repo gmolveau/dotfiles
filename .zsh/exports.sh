@@ -56,3 +56,8 @@ elif [ "$(uname)" = "Linux" ]; then
     [ -z "$LS_COLORS" ] && command -v dircolors >/dev/null && eval "$(dircolors -b)"
     ls --color -d . &>/dev/null && alias ls='ls --color=tty'
 fi
+
+# remove '-' from the default WORDCHARS
+# in order for word-splitting to work correctly
+# when deleting a word
+WORDCHARS=${WORDCHARS//-/}

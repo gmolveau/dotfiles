@@ -3,5 +3,9 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-git remote prune origin
-git fetch -p && git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D
+# delete local branches whose upstream is gone
+git fetch --prune
+
+git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads \
+    | awk '$2 == "[gone]" { print $1 }' \
+    | xargs -r git branch -D
