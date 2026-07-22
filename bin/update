@@ -11,6 +11,10 @@ function common_update() {
     uv self update
     uv tool upgrade --all
 
+    echo "updating zsh plugins and completions ..."
+    zsh-plugins-update
+    zsh-completions-update
+
     echo "updating rust ..."
     rustup self update
     cargo update
