@@ -23,6 +23,15 @@ if [[ ! -f "${_zcompdump}.zwc" || "${_zcompdump}" -nt "${_zcompdump}.zwc" ]]; th
 fi
 zstyle ':completion:*' menu select
 
+# SSH host completion from ~/.ssh/config
+_ssh_configfile="$HOME/.ssh/config"
+if [[ -f "$_ssh_configfile" ]]; then
+  _ssh_hosts=(${(f)"$(grep -E '^Host\s' "$_ssh_configfile" | awk '{for (i=2; i<=NF; i++) print $i}' | sort -u | grep -v '^*' | sed -e 's/\.*\*$//')"})
+  zstyle ':completion:*:hosts' hosts "$_ssh_hosts[@]"
+  unset _ssh_hosts
+fi
+unset _ssh_configfile
+
 # Regenerate tool completions into ~/.zsh/completions/ from the installed tools.
 # _cargo stays committed (it's a shim that tracks the toolchain); the rest are
 # generated snapshots we deliberately do not commit.
