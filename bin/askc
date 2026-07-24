@@ -29,7 +29,20 @@ else
 	workdir=$(mktemp -d "${base}/askc.XXXXXX")
 fi
 
-echo "askc: working in ${workdir}"
+ai_agent="${AI_AGENT:-claude}"
+
+echo "askc: working in ${workdir} (agent: ${ai_agent})"
 
 cd "${workdir}"
-exec claude --permission-mode acceptEdits "$@"
+
+case "${ai_agent}" in
+	claude)
+		exec claude --permission-mode acceptEdits "$@" ;;
+	opencode)
+		exec opencode run "$@" ;;
+	vibe)
+		exec vibe --trust --agent accept-edits "$@" ;;
+	*)
+		echo "askc: unknown agent '${ai_agent}'" >&2
+		exit 2;;
+esac
