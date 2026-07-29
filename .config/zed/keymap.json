@@ -41,5 +41,11 @@
     "bindings": {
       "cmd-alt-g": ["task::Spawn", { "task_name": "Open current file in browser" }]
     }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-t": "project_symbols::Toggle"
+    }
   }
 ]
