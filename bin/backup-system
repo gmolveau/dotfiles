@@ -4,6 +4,7 @@ set -o pipefail
 set -o nounset
 
 function common_backup() {
+    echo "listing : applications"
     OUTPUT="${BACKUP_PATH}" freeze
 
     echo "backing up : ssh keys"
@@ -24,9 +25,6 @@ function common_backup() {
 }
 
 function macos_backup() {
-    echo "listing : applications"
-    freeze >"${BACKUP_PATH}/apps.txt"
-
     echo "taking screenshot"
     screencapture "${BACKUP_PATH}/screenshot.png"
 }
