@@ -58,5 +58,16 @@
     "mode": "system",
     "light": "GitHub Light",
     "dark": "One Dark"
+  },
+  "languages": {
+    "Markdown": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "markdownlint-cli2",
+          "arguments": ["--format"]
+        }
+      }
+    }
   }
 }
