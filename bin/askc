@@ -39,7 +39,7 @@ case "${ai_agent}" in
 	claude)
 		exec claude --permission-mode acceptEdits "$@" ;;
 	opencode)
-		exec opencode run "$@" ;;
+		exec opencode "$@" ;;
 	vibe)
 		exec vibe --trust --agent accept-edits "$@" ;;
 	*)
