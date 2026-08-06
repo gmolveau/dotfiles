@@ -4,26 +4,25 @@ set -o pipefail
 set -o nounset
 
 # sfind = string-find
+# search file contents in the current dir, interactively via fzf.
 
 deps=0
-for app in ripgrep fzf; do
-    ! command -v ${app} &> /dev/null && echo "$app is not installed" && deps=1
+for app in rg fzf bat; do
+    ! command -v ${app} &>/dev/null && echo "$app is not installed" && deps=1
 done
 [[ $deps -ne 0 ]] && exit 1
 
-if command -v bat >/dev/null 2>&1; then
-    rg "" --line-number . | fzf --delimiter ":" \
-    --preview "bat --highlight-line {2} {1}" \
-    --bind "change:reload:rg {q} --line-number . || true" \
-    --bind "ctrl-o:execute(open -R {1})" \
-    --bind "ctrl-e:execute(ccc {1})" \
-    --bind "ctrl-x:execute(ooo {1})" \
-    --bind "ctrl-d:abort"
-else
-    rg "" --line-number . | fzf --delimiter ":" \
-    --bind "change:reload:rg {q} --line-number . || true" \
-    --bind "ctrl-o:execute(open -R {1})" \
-    --bind "ctrl-e:execute(ccc {1})" \
-    --bind "ctrl-x:execute(ooo {1})" \
-    --bind "ctrl-d:abort"
-fi
+query="${1-}"
+
+# --disabled: fzf does not filter the list itself; ripgrep drives it.
+# --bind change: re-run ripgrep with the current query on every keystroke.
+rg "${query}" --line-number --no-heading --color=never . 2>/dev/null |
+    fzf --delimiter ":" --with-nth 1,2,3 \
+        --disabled --query "${query}" \
+        --preview "bat --highlight-line {2} --color=always {1}" \
+        --bind "change:reload:rg {q} --line-number --no-heading --color=never . || true" \
+        --bind "ctrl-c:execute(echo {1} | pbcopy)+abort" \
+        --bind "ctrl-o:execute(open -R {1})" \
+        --bind "ctrl-e:execute(ccc {1})" \
+        --bind "ctrl-x:execute(ooo {1})" \
+        --bind "ctrl-d:abort"

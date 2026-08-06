@@ -4,15 +4,19 @@ set -o pipefail
 set -o nounset
 
 # dfind = directory-find
+# list directories in the current dir, interactively via fzf.
 
-if ! command -v fzf &> /dev/null; then
-    echo "fzf is not installed"
-    echo "please install with : "
-    echo "$ brew install fzf"
-    echo "$ apt-get install fzf"
-    exit 1
-fi
-find . -type d | fzf \
+deps=0
+for app in fd fzf eza; do
+    ! command -v ${app} &> /dev/null && echo "$app is not installed" && deps=1
+done
+[[ $deps -ne 0 ]] && exit 1
+
+query="${1-}"
+
+fd --type d --hidden | fzf \
+    --query "${query}" \
+    --preview "eza -la --tree --level=1 {1}" \
     --bind "ctrl-c:execute(echo {1} | pbcopy)+abort" \
     --bind "ctrl-o:execute(open -R {1})" \
     --bind "ctrl-e:execute(ccc {1})" \
