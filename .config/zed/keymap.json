@@ -21,31 +21,41 @@
   {
     "context": "Workspace",
     "bindings": {
-      "cmd-t": "workspace::NewCenterTerminal"
-    }
+      "cmd-t": "workspace::NewCenterTerminal",
+      "ctrl-t": "workspace::NewCenterTerminal",
+    },
   },
   {
     "context": "Workspace",
     "unbind": {
-      "ctrl-`": "terminal_panel::Toggle"
-    }
+      "ctrl-`": "terminal_panel::Toggle",
+    },
   },
   {
     "context": "Terminal",
     "unbind": {
-      "cmd-n": "workspace::NewTerminal"
-    }
+      "cmd-n": "workspace::NewTerminal",
+    },
   },
   {
     "context": "Workspace",
     "bindings": {
-      "cmd-alt-g": ["task::Spawn", { "task_name": "Open current file in browser" }]
-    }
+      "cmd-alt-g": [
+        "task::Spawn",
+        { "task_name": "Open current file in browser" },
+      ],
+    },
   },
   {
     "context": "Workspace",
     "unbind": {
-      "ctrl-t": "project_symbols::Toggle"
-    }
-  }
+      "ctrl-t": "project_symbols::Toggle",
+    },
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-shift-l": "editor::SplitSelectionIntoLines",
+    },
+  },
 ]

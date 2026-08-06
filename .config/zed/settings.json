@@ -9,28 +9,28 @@
 {
   "disable_ai": true,
   "terminal": {
-    "font_size": 12.0
+    "font_size": 12.0,
   },
   "project_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "outline_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "collaboration_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "git_panel": {
-    "dock": "left"
+    "dock": "left",
   },
   "cli_default_open_behavior": "new_window",
   "session": {
-    "trust_all_worktrees": true
+    "trust_all_worktrees": true,
   },
   "telemetry": {
     "diagnostics": false,
     "metrics": false,
-    "anthropic_retention": false
+    "anthropic_retention": false,
   },
   "base_keymap": "VSCode",
   "agent": {
@@ -38,17 +38,13 @@
     "enabled": false,
     "button": false,
     "favorite_models": [],
-    "model_parameters": []
+    "model_parameters": [],
   },
   "multi_cursor_modifier": "cmd_or_ctrl",
   "minimap": {
-    "show": "always"
+    "show": "always",
   },
-  "buffer_font_fallbacks": [
-    "Consolas",
-    "Courier New",
-    "monospace"
-  ],
+  "buffer_font_fallbacks": ["Consolas", "Courier New", "monospace"],
   "buffer_font_family": "Roboto Mono",
   "auto_indent_on_paste": true,
   "soft_wrap": "editor_width",
@@ -57,17 +53,17 @@
   "theme": {
     "mode": "system",
     "light": "GitHub Light",
-    "dark": "One Dark"
+    "dark": "One Dark",
   },
+  "format_on_save": "on",
   "languages": {
     "Markdown": {
-      "format_on_save": "on",
       "formatter": {
         "external": {
           "command": "markdownlint-cli2",
-          "arguments": ["--format"]
-        }
-      }
-    }
-  }
+          "arguments": ["--format"],
+        },
+      },
+    },
+  },
 }
