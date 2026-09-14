@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# brew install imagemagick | apt install imagemagick
+! command -v "convert" &> /dev/null && (
+    echo "imagemagick is not installed"
+    echo "please install with : "
+    echo "$ brew install imagemagick"
+    echo "$ apt-get install imagemagick"
+    exit 1
+)
+if [ $# -eq 0 ]; then
+    echo "missing argument"
+    exit 1
+fi
+if [ ! -f "${1}" ]; then
+    echo "${1} is not a file"
+    exit 1
+fi
+
+filename=$(basename "${1}")
+
+convert -density 200 "${1}" -alpha remove -rotate 0.4 -attenuate 0.2 +noise Multiplicative +repage -monochrome -compress group4 -depth 2 "${filename%.*}_scanned.pdf"
