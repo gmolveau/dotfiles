@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Convert a WebM file to a well‑compressed MP4.
+# Usage: ./convert_webm_to_mp4.sh input.webm
+# Output is placed next to the source with the same base name.
+
+if [[ $# -ne 1 ]]; then
+  echo "missing argument: input WebM file"
+  exit 1
+fi
+
+input="$1"
+
+# Verify ffmpeg is available
+! command -v ffmpeg &>/dev/null && {
+  echo "ffmpeg is not installed"
+  echo "install with: brew install ffmpeg   # macOS"
+  echo "or: sudo apt‑get install ffmpeg   # Debian/Ubuntu"
+  exit 1
+}
+
+# Validate input file
+[[ -f "$input" ]] || { echo "file not found: $input"; exit 1; }
+[[ "${input##*.}" == "webm" ]] || { echo "must be a .webm file"; exit 1; }
+
+# Output path (same directory, .mp4 extension)
+output="${input%.*}.mp4"
+
+ffmpeg -fflags +genpts -i "$input" \
+  -hide_banner -loglevel error \
+  -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" \
+  -fpsmax 24 \
+  -an \
+  -c:v libx264 -preset ultrafast -crf 28 \
+  -y "$output"
+
+echo "Converted $input → $output"
