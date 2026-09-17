@@ -1,0 +1,25 @@
+---
+- name: Check for Homebrew
+  ansible.builtin.stat:
+    path: "{{ homebrew_prefix }}/bin/brew"
+  register: macos_brewfile_brew
+
+- name: Check for Brewfile
+  ansible.builtin.stat:
+    path: "{{ macos_brewfile }}"
+  register: macos_brewfile_file
+
+- name: Install everything listed in the Brewfile
+  ansible.builtin.command:
+    cmd: "brew bundle --file={{ macos_brewfile }}"
+  when: macos_brewfile_brew.stat.exists and macos_brewfile_file.stat.exists
+  register: macos_brewfile_bundle
+  changed_when: "'Installing' in (macos_brewfile_bundle.stdout + macos_brewfile_bundle.stderr)"
+  # brew bundle itself skips what is already installed.
+
+# Needed by the dotfiles role (login shell change); not always in the Brewfile.
+- name: Ensure zsh is installed
+  community.general.homebrew:
+    name: zsh
+    state: present
+  when: macos_brewfile_brew.stat.exists

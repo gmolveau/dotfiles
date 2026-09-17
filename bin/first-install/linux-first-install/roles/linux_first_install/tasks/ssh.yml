@@ -1,0 +1,18 @@
+---
+- name: Check for ed25519 SSH key
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.ssh/id_ed25519"
+  register: linux_ssh_key
+
+- name: Generate ed25519 SSH key
+  ansible.builtin.command:
+    argv:
+      - ssh-keygen
+      - -q
+      - -C ""
+      - -N ""
+      - -t
+      - ed25519
+      - -f
+      - "{{ ansible_facts['env']['HOME'] }}/.ssh/id_ed25519"
+  when: not linux_ssh_key.stat.exists

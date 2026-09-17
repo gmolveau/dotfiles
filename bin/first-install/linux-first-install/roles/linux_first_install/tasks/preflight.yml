@@ -1,0 +1,23 @@
+---
+- name: Assert the distribution is Debian-based
+  ansible.builtin.assert:
+    that: ansible_facts['os_family'] == "Debian"
+    fail_msg: "this playbook only supports Debian-based distributions (apt)"
+    success_msg: "Debian-based distribution detected"
+
+- name: Check that sudo is usable
+  ansible.builtin.command: sudo -n true
+  become: false
+  changed_when: false
+  failed_when: false
+  register: linux_sudo_check
+  # The playbook itself never escalates globally; apt tasks use per-task
+  # become, which triggers a sudo password prompt on the terminal running
+  # ansible-playbook (same as -K on macOS).
+
+- name: Report sudo status
+  ansible.builtin.debug:
+    msg: >-
+      {{ 'sudo already cached' if linux_sudo_check.rc == 0
+         else 'sudo will prompt for a password during apt tasks' }}
+  changed_when: false

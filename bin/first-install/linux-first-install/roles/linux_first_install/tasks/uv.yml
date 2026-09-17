@@ -1,0 +1,10 @@
+---
+- name: Check for uv
+  ansible.builtin.command: uv --version
+  changed_when: false
+  failed_when: false
+  register: linux_uv_version
+
+- name: Install uv
+  ansible.builtin.shell: curl -LsSf https://astral.sh/uv/install.sh | sh
+  when: linux_uv_version.rc != 0

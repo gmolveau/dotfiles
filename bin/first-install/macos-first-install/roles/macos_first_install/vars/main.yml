@@ -1,0 +1,196 @@
+---
+homebrew_prefix: "{{ '/opt/homebrew' if ansible_facts['architecture'] == 'arm64' else '/usr/local' }}"
+
+# User-domain defaults written with `defaults write` (no sudo). Entries without a
+# `domain` key are written to NSGlobalDomain.
+macos_user_defaults:
+  # Battery: show remaining %
+  - {domain: com.apple.menuextra.battery, key: ShowPercent, type: string, value: "NO"}
+
+  # NSGlobalDomain
+  - {key: AppleShowScrollBars, type: string, value: Always}
+  - {key: NSNavPanelExpandedStateForSaveMode, type: bool, value: true}
+  - {key: NSNavPanelExpandedStateForSaveMode2, type: bool, value: true}
+  - {key: PMPrintingExpandedStateForPrint, type: bool, value: true}
+  - {key: PMPrintingExpandedStateForPrint2, type: bool, value: true}
+  - {key: NSDocumentSaveNewDocumentsToCloud, type: bool, value: false}
+  - {key: NSTextShowsControlCharacters, type: bool, value: true}
+  - {key: NSDisableAutomaticTermination, type: bool, value: true}
+  - {key: NSAutomaticCapitalizationEnabled, type: bool, value: false}
+  - {key: NSAutomaticDashSubstitutionEnabled, type: bool, value: false}
+  - {key: NSAutomaticPeriodSubstitutionEnabled, type: bool, value: false}
+  - {key: NSAutomaticQuoteSubstitutionEnabled, type: bool, value: false}
+  - {key: NSAutomaticSpellingCorrectionEnabled, type: bool, value: false}
+  - {key: com.apple.swipescrolldirection, type: bool, value: false}
+  - {key: com.apple.mouse.tapBehavior, type: int, value: 1}
+  - {key: AppleKeyboardUIMode, type: int, value: 3}
+  - {key: ApplePressAndHoldEnabled, type: bool, value: false}
+  - {key: KeyRepeat, type: int, value: 2}
+  - {key: InitialKeyRepeat, type: int, value: 15}
+  - {key: AppleFontSmoothing, type: int, value: 1}
+  - {key: AppleShowAllExtensions, type: bool, value: true}
+  - {key: com.apple.springing.enabled, type: bool, value: true}
+  - {key: com.apple.springing.delay, type: float, value: 0}
+
+  # currentHost-only defaults
+  - {host: currentHost, key: com.apple.mouse.tapBehavior, type: int, value: 1}
+  - {host: currentHost, domain: com.apple.ImageCapture, key: disableHotPlug, type: bool, value: true}
+
+  # Printer app
+  - {domain: com.apple.print.PrintingPrefs, key: "Quit When Finished", type: bool, value: true}
+
+  # LaunchServices
+  - {domain: com.apple.LaunchServices, key: LSQuarantine, type: bool, value: false}
+
+  # Help Viewer
+  - {domain: com.apple.helpviewer, key: DevMode, type: bool, value: true}
+
+  # Trackpad
+  - {domain: com.apple.driver.AppleBluetoothMultitouch.trackpad, key: Clicking, type: bool, value: true}
+  - {domain: com.apple.AppleMultitouchTrackpad, key: TrackpadRightClick, type: int, value: 1}
+  - {domain: com.apple.AppleMultitouchTrackpad, key: TrackpadTwoFingerDoubleTapGesture, type: int, value: 1}
+  - {domain: com.apple.AppleMultitouchTrackpad, key: TrackpadPinch, type: int, value: 1}
+  - {domain: com.apple.AppleMultitouchTrackpad, key: TrackpadThreeFingerVertSwipeGesture, type: int, value: 2}
+  - {domain: com.apple.AppleMultitouchTrackpad, key: TrackpadThreeFingerHorizSwipeGesture, type: int, value: 2}
+  - {domain: com.apple.AppleMultitouchTrackpad, key: TrackpadFourFingerPinchGesture, type: int, value: 2}
+
+  # Screensaver
+  - {domain: com.apple.screensaver, key: askForPassword, type: int, value: 1}
+  - {domain: com.apple.screensaver, key: askForPasswordDelay, type: int, value: 0}
+
+  # Screencapture
+  - {domain: com.apple.screencapture, key: disable-shadow, type: bool, value: true}
+  - {domain: com.apple.screencapture, key: type, type: string, value: jpg}
+  - {domain: com.apple.screencapture, key: location, type: string, value: "{{ ansible_facts['env']['HOME'] }}/Desktop"}
+
+  # Finder
+  - {domain: com.apple.finder, key: QuitMenuItem, type: bool, value: true}
+  - {domain: com.apple.finder, key: NewWindowTarget, type: string, value: PfLo}
+  - {domain: com.apple.finder, key: NewWindowTargetPath, type: string, value: "file://{{ ansible_facts['env']['HOME'] }}/"}
+  - {domain: com.apple.finder, key: DisableAllAnimations, type: bool, value: true}
+  - {domain: com.apple.finder, key: ShowStatusBar, type: bool, value: true}
+  - {domain: com.apple.finder, key: ShowPathbar, type: bool, value: true}
+  - {domain: com.apple.finder, key: FXDefaultSearchScope, type: string, value: SCcf}
+  - {domain: com.apple.finder, key: FXEnableExtensionChangeWarning, type: bool, value: false}
+  - {domain: com.apple.finder, key: FXPreferredViewStyle, type: string, value: nlsv}
+  - {domain: com.apple.finder, key: WarnOnEmptyTrash, type: bool, value: false}
+  - {domain: com.apple.finder, key: QLEnableTextSelection, type: bool, value: true}
+  - domain: com.apple.finder
+    key: FXInfoPanesExpanded
+    type: dict
+    value: {General: true, OpenWith: true, Privileges: true}
+
+  # Avoid .DS_Store on network / USB volumes
+  - {domain: com.apple.desktopservices, key: DSDontWriteNetworkStores, type: bool, value: true}
+  - {domain: com.apple.desktopservices, key: DSDontWriteUSBStores, type: bool, value: true}
+
+  # Disk images
+  - {domain: com.apple.frameworks.diskimages, key: skip-verify, type: bool, value: true}
+  - {domain: com.apple.frameworks.diskimages, key: skip-verify-locked, type: bool, value: true}
+  - {domain: com.apple.frameworks.diskimages, key: skip-verify-remote, type: bool, value: true}
+
+  # Dock
+  - {domain: com.apple.dock, key: wvous-br-corner, type: int, value: 5}
+  - {domain: com.apple.dock, key: wvous-br-modifier, type: int, value: 0}
+  - {domain: com.apple.dock, key: show-process-indicators, type: bool, value: true}
+  - {domain: com.apple.dock, key: minimize-to-application, type: bool, value: true}
+  - {domain: com.apple.dock, key: launchanim, type: bool, value: false}
+  - {domain: com.apple.dock, key: enable-spring-load-actions-on-all-items, type: bool, value: true}
+  - {domain: com.apple.dock, key: dashboard-in-overlay, type: bool, value: true}
+  - {domain: com.apple.dock, key: mru-spaces, type: bool, value: false}
+  - {domain: com.apple.dock, key: show-recents, type: bool, value: false}
+  - {domain: com.apple.dock, key: expose-animation-duration, type: float, value: 0.1}
+  - {domain: com.apple.dock, key: expose-group-by-app, type: bool, value: false}
+  - {domain: com.apple.dock, key: mineffect, type: string, value: genie}
+
+  # Dashboard
+  - {domain: com.apple.dashboard, key: mcx-disabled, type: bool, value: true}
+  - {domain: com.apple.dashboard, key: devmode, type: bool, value: true}
+
+  # Mail
+  - {domain: com.apple.mail, key: DisableReplyAnimations, type: bool, value: true}
+  - {domain: com.apple.mail, key: DisableSendAnimations, type: bool, value: true}
+  - {domain: com.apple.mail, key: AddressesIncludeNameOnPasteboard, type: bool, value: false}
+  - {domain: com.apple.mail, key: SpellCheckingBehavior, type: string, value: NoSpellCheckingEnabled}
+
+  # Time Machine
+  - {domain: com.apple.TimeMachine, key: DoNotOfferNewDisksForBackup, type: bool, value: true}
+
+  # Activity Monitor
+  - {domain: com.apple.ActivityMonitor, key: OpenMainWindow, type: bool, value: true}
+  - {domain: com.apple.ActivityMonitor, key: IconType, type: int, value: 5}
+  - {domain: com.apple.ActivityMonitor, key: ShowCategory, type: int, value: 0}
+  - {domain: com.apple.ActivityMonitor, key: SortColumn, type: string, value: CPUUsage}
+  - {domain: com.apple.ActivityMonitor, key: SortDirection, type: int, value: 0}
+
+  # Address Book
+  - {domain: com.apple.addressbook, key: ABShowDebugMenu, type: bool, value: true}
+
+  # iCal
+  - {domain: com.apple.iCal, key: CalendarSidebarShown, type: bool, value: true}
+  - {domain: com.apple.iCal, key: "Default duration in minutes for new event", type: float, value: 30}
+  - {domain: com.apple.iCal, key: IncludeDebugMenu, type: bool, value: true}
+  - {domain: com.apple.iCal, key: InviteeDeclineAlerts, type: bool, value: false}
+  - {domain: com.apple.iCal, key: "Show Week Numbers", type: bool, value: true}
+  - {domain: com.apple.iCal, key: enableTravelAdvisoriesForAutomaticBehavior, type: bool, value: true}
+  - {domain: com.apple.iCal, key: "first minute of day time range", type: int, value: 0}
+  - {domain: com.apple.iCal, key: "last calendar view description", type: string, value: 7-day}
+  - {domain: com.apple.iCal, key: "last minute of day time range", type: int, value: 1440}
+
+  # Control Center
+  - {domain: com.apple.controlcenter, key: "NSStatusItem VisibleCC Battery", type: bool, value: true}
+  - {domain: com.apple.controlcenter, key: "NSStatusItem VisibleCC Sound", type: bool, value: true}
+  - {domain: com.apple.controlcenter, key: "NSStatusItem VisibleCC Spotlight", type: bool, value: false}
+
+  # TextEdit
+  - {domain: com.apple.TextEdit, key: RichText, type: int, value: 0}
+  - {domain: com.apple.TextEdit, key: PlainTextEncoding, type: int, value: 4}
+  - {domain: com.apple.TextEdit, key: PlainTextEncodingForWrite, type: int, value: 4}
+
+  # Disk Utility
+  - {domain: com.apple.DiskUtility, key: DUDebugMenuEnabled, type: bool, value: true}
+  - {domain: com.apple.DiskUtility, key: advanced-image-options, type: bool, value: true}
+
+  # App Store
+  - {domain: com.apple.appstore, key: WebKitDeveloperExtras, type: bool, value: true}
+  - {domain: com.apple.appstore, key: ShowDebugMenu, type: bool, value: true}
+
+  # Software Update
+  - {domain: com.apple.SoftwareUpdate, key: AutomaticCheckEnabled, type: bool, value: true}
+  - {domain: com.apple.SoftwareUpdate, key: ScheduleFrequency, type: int, value: 1}
+  - {domain: com.apple.SoftwareUpdate, key: AutomaticDownload, type: int, value: 1}
+  - {domain: com.apple.SoftwareUpdate, key: CriticalUpdateInstall, type: int, value: 1}
+  - {domain: com.apple.commerce, key: AutoUpdate, type: bool, value: true}
+
+  # Google Chrome
+  - {domain: com.google.Chrome, key: AppleEnableSwipeNavigateWithScrolls, type: bool, value: false}
+  - {domain: com.google.Chrome, key: AppleEnableMouseSwipeNavigateWithScrolls, type: bool, value: false}
+  - {domain: com.google.Chrome, key: DisablePrintPreview, type: bool, value: true}
+  - {domain: com.google.Chrome, key: PMPrintingExpandedStateForPrint2, type: bool, value: true}
+
+  # Terminal
+  - {domain: com.apple.terminal, key: StringEncodings, type: array, value: [4]}
+  - {domain: com.apple.terminal, key: SecureKeyboardEntry, type: bool, value: true}
+  - {domain: com.apple.Terminal, key: ShowLineMarks, type: int, value: 0}
+
+  # iTerm
+  - {domain: com.googlecode.iterm2, key: PromptOnQuit, type: bool, value: false}
+
+# Defaults written with `defaults -dict-add` (merge keys into an existing dict).
+macos_dict_add_defaults:
+  - domain: com.apple.mail
+    key: DraftsViewerAttributes
+    value:
+      DisplayInThreadedMode: "yes"
+      SortedDescending: "yes"
+      SortOrder: received-date
+  - domain: com.apple.messageshelper.MessageController
+    key: SOInputLineSettings
+    value:
+      automaticQuoteSubstitutionEnabled: false
+
+# System-wide defaults under /Library/Preferences (written with sudo).
+macos_system_defaults:
+  - {domain: /Library/Preferences/com.apple.loginwindow, key: AdminHostInfo, type: string, value: HostName}
+  - {domain: /Library/Preferences/com.apple.windowserver, key: DisplayResolutionEnabled, type: bool, value: true}
+  - {domain: /Library/Preferences/SystemConfiguration/com.apple.smb.server, key: NetBIOSName, type: string, value: "{{ macos_hostname }}"}

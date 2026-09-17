@@ -1,0 +1,13 @@
+---
+- name: Download the Visual Studio Code .deb
+  ansible.builtin.get_url:
+    url: https://go.microsoft.com/fwlink/?LinkID=760868
+    dest: /tmp/vscode.deb
+    mode: "0644"
+  register: linux_vscode_deb
+
+- name: Install Visual Studio Code
+  ansible.builtin.apt:
+    deb: "{{ linux_vscode_deb.dest }}"
+    state: present
+  become: true

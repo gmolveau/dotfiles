@@ -1,0 +1,53 @@
+---
+- name: Disable boot sound
+  ansible.builtin.command:
+    argv:
+      - nvram
+      - "SystemAudioVolume= "
+  become: true
+  changed_when: false
+
+- name: Install macOS software updates
+  ansible.builtin.command: softwareupdate --install -a
+  become: true
+  register: macos_softwareupdate
+  changed_when: "'No new software available' not in macos_softwareupdate.stdout"
+  failed_when: false
+
+- name: Install Rosetta 2
+  ansible.builtin.command: softwareupdate --install-rosetta --agree-to-license
+  become: true
+  when: ansible_facts['architecture'] == 'arm64'
+  register: macos_rosetta
+  changed_when: "'already installed' not in macos_rosetta.stdout"
+  failed_when: false
+
+# pmset -a/-b/-c select all / battery / charger.
+- name: Configure power management
+  ansible.builtin.command: "pmset {{ item }}"
+  loop:
+    - -a lidwake 1
+    - -b powernap 0
+    - -a displaysleep 30
+    - -c sleep 0
+  become: true
+  changed_when: false
+
+- name: Show ~/Library in Finder
+  ansible.builtin.command: chflags nohidden "{{ ansible_facts['env']['HOME'] }}/Library"
+  changed_when: false
+
+- name: Show /Volumes in Finder
+  ansible.builtin.command: chflags nohidden /Volumes
+  become: true
+  changed_when: false
+
+# The launchd module does not reliably address system LaunchAgents such as
+# com.apple.notificationcenterui, so unload it directly.
+- name: Disable Notification Center
+  ansible.builtin.command: >-
+    launchctl unload -w
+    /System/Library/LaunchAgents/com.apple.notificationcenterui.plist
+  become: true
+  changed_when: false
+  failed_when: false

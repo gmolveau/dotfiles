@@ -1,0 +1,14 @@
+---
+linux_basic_tools:
+  - tree
+  - zip
+  - scrot
+  - gparted
+  - curl
+  - wget
+  - nano
+  - vim
+  - terminator
+  - ghostscript
+  - ffmpeg
+linux_node_major: "24"

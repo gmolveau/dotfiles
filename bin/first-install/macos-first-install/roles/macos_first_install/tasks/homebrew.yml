@@ -1,0 +1,23 @@
+---
+- name: Check for Homebrew
+  ansible.builtin.stat:
+    path: "{{ homebrew_prefix }}/bin/brew"
+  register: macos_brew
+
+- name: Install Homebrew
+  ansible.builtin.shell: >-
+    NONINTERACTIVE=1 /bin/bash -c
+    "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    creates: "{{ homebrew_prefix }}/bin/brew"
+  when: not macos_brew.stat.exists
+  # Homebrew refuses to run as root; if sudo is not already cached the
+  # installer will prompt on the terminal running ansible-playbook.
+
+- name: Add Homebrew to ~/.zprofile
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zprofile"
+    line: 'eval "$({{ homebrew_prefix }}/bin/brew shellenv)"'
+    create: true
+    mode: "0644"
+    state: present

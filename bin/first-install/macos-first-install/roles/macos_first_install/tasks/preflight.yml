@@ -1,0 +1,22 @@
+---
+- name: Quit System Preferences
+  ansible.builtin.command:
+    argv:
+      - osascript
+      - -e
+      - 'tell application "System Preferences" to quit'
+  changed_when: false
+  failed_when: false
+
+- name: Check for Xcode command line tools
+  ansible.builtin.command: xcode-select -p
+  register: macos_xcode_select
+  changed_when: false
+  failed_when: false
+
+- name: Install Xcode command line tools
+  ansible.builtin.command: xcode-select --install
+  when: macos_xcode_select.rc != 0
+  changed_when: true
+  # Opens the GUI installer and returns immediately.
+  failed_when: false

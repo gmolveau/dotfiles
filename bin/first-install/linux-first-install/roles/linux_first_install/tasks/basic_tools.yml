@@ -1,0 +1,7 @@
+---
+- name: Install basic tools
+  ansible.builtin.apt:
+    name: "{{ linux_basic_tools }}"
+    state: present
+    install_recommends: false
+  become: true

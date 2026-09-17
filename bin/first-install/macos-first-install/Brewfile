@@ -1,0 +1,183 @@
+tap "chamburr/tap"
+tap "nextdns/tap"
+# Automate deployment, configuration, and upgrading
+brew "ansible"
+# Codec library for encoding and decoding AV1 video streams
+brew "aom"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Modern, simple TCP tunnel in Rust that exposes local ports to a remote server
+brew "bore-cli"
+# Cloudflare Tunnel client (formerly Argo Tunnel)
+brew "cloudflared"
+# Securely send things from one computer to another
+brew "croc"
+# Power of curl, ease of use of httpie
+brew "curlie"
+# Good-lookin' diffs with diff-highlight and more
+brew "diff-so-fancy"
+# Tool for exploring each layer in a docker image
+brew "dive"
+# Disk Usage/Free Utility - a better 'df' alternative
+brew "duf"
+# Perl lib for reading and writing EXIF metadata
+brew "exiftool"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Interpreter for PostScript and PDF
+brew "ghostscript"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
+# Smarter Dockerfile linter to validate best practices
+brew "hadolint"
+# Improved top (interactive process viewer)
+brew "htop"
+# Website copier/offline browser
+brew "httrack"
+# Tools and libraries to manipulate images in select formats
+brew "imagemagick"
+# API Support for your favorite torrent trackers
+brew "jackett"
+# New file format for still image compression
+brew "jpeg-xl"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Handy way to save and run project-specific commands
+brew "just"
+# Sophisticated file transfer program
+brew "lftp"
+# Postgres C API library
+brew "libpq"
+# Access large language models from the command-line
+brew "llm"
+# Mac App Store command-line interface
+brew "mas"
+# Show markdown documents on text terminals
+brew "mdcat"
+# Matroska media files manipulation tools
+brew "mkvtoolnix"
+# Deep clean and optimize your Mac
+brew "mole"
+# CLI tool for saving complete web pages as a single HTML file
+brew "monolith"
+# NCurses Disk Usage
+brew "ncdu"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# Fast, disk space efficient package manager
+brew "pnpm"
+# Reattach process (e.g., tmux) to background
+brew "reattach-to-user-namespace"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Autoformat shell script source code
+brew "shfmt"
+# Fuzzy Finder in rust!
+brew "sk"
+# Powerful free data recovery utility
+brew "testdisk"
+# Terminal multiplexer
+brew "tmux"
+# Command-line unarchiving tools supporting multiple formats
+brew "unar"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
+# Internet file retriever
+brew "wget"
+# Friendly and fast tool for sending HTTP requests
+brew "xh"
+# Command-line program for getting and setting the contents of the X selection
+brew "xsel"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
+# NextDNS DNS/53 to DoH Proxy
+brew "nextdns/tap/nextdns", trusted: true
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
+# Command-line interface for 1Password
+cask "1password-cli"
+# Image editing and design software
+cask "affinity"
+# Application uninstaller
+cask "appcleaner"
+# Open source IDE for exploring and testing APIs
+cask "bruno"
+# Server and cloud storage browser
+cask "cyberduck"
+# Browser for SQLite databases
+cask "db-browser-for-sqlite"
+# Voice and text chat software
+cask "discord"
+# Online diagram software
+cask "drawio"
+# Web browser
+cask "firefox"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# 🔎 All-in-one Quick Look plugin
+cask "chamburr/tap/glance", trusted: true
+# Web browser
+cask "google-chrome"
+# Open-source video transcoder
+cask "handbrake-app"
+# Tool to optimise images to a smaller size
+cask "imageoptim"
+# Open-source screen recorder built with web technology
+cask "kap"
+# Wallet desktop application to maintain multiple cryptocurrencies
+cask "ledger-wallet"
+# Visual diff and merge tool
+cask "meld"
+# Desktop sync client for Nextcloud software products
+cask "nextcloud"
+# VPN client for secure internet access and private browsing
+cask "nordvpn"
+# Finder Toolbar app to open the current directory in Editor
+cask "openineditor-lite"
+# Finder Toolbar app to open the current directory in Terminal
+cask "openinterminal-lite"
+# Replacement for Docker Desktop
+cask "orbstack"
+# Move and resize windows using keyboard shortcuts or snap areas
+cask "rectangle"
+# Open source virtual/remote desktop application
+cask "rustdesk"
+# Instant messaging application focusing on security
+cask "signal"
+# Music streaming service
+cask "spotify"
+# System monitor for the menu bar
+cask "stats"
+# Text editor for code, markup and prose
+cask "sublime-text"
+# Mesh VPN based on WireGuard
+cask "tailscale-app"
+# Remote access and connectivity software focused on security
+cask "teamviewer"
+# Open-source BitTorrent client
+cask "transmission"
+# Open-source code editor
+cask "visual-studio-code"
+# Multimedia player
+cask "vlc"
+# Multiplayer code editor
+cask "zed"
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
+mas "Keynote", id: 361285480
+mas "Numbers", id: 361304891
+mas "Pages", id: 361309726
+mas "The Unarchiver", id: 425424353
+cargo "gitlab-ci-ls"

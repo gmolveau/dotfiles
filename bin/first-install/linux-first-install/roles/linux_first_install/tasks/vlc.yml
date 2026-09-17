@@ -1,0 +1,6 @@
+---
+- name: Install VLC
+  ansible.builtin.apt:
+    name: vlc
+    state: present
+  become: true

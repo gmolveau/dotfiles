@@ -1,0 +1,10 @@
+---
+- name: Check for claude
+  ansible.builtin.command: claude --version
+  changed_when: false
+  failed_when: false
+  register: linux_claude_version
+
+- name: Install claude
+  ansible.builtin.shell: curl -fsSL https://claude.ai/install.sh | bash
+  when: linux_claude_version.rc != 0

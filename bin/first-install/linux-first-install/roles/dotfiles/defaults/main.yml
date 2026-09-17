@@ -1,0 +1,6 @@
+---
+dotfiles_repo: git@github.com:gmolveau/dotfiles.git
+dotfiles_zsh_plugins:
+  - zsh-users/zsh-autosuggestions
+  - zsh-users/zsh-completions
+  - zsh-users/zsh-syntax-highlighting

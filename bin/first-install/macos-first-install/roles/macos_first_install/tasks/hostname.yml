@@ -1,0 +1,6 @@
+---
+- name: Set ComputerName, HostName and LocalHostName
+  ansible.builtin.hostname:
+    name: "{{ macos_hostname }}"
+    use: macos
+  become: true

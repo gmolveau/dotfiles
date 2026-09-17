@@ -1,0 +1,51 @@
+---
+- name: Preflight checks
+  ansible.builtin.import_tasks: preflight.yml
+
+- name: Update and upgrade packages
+  ansible.builtin.import_tasks: update.yml
+
+- name: Basic tools
+  ansible.builtin.import_tasks: basic_tools.yml
+
+- name: Tmux
+  ansible.builtin.import_tasks: tmux.yml
+
+- name: SSH key
+  ansible.builtin.import_tasks: ssh.yml
+
+- name: 1Password
+  ansible.builtin.import_tasks: onepassword.yml
+
+- name: Visual Studio Code
+  ansible.builtin.import_tasks: vscode.yml
+
+- name: Signal
+  ansible.builtin.import_tasks: signal.yml
+
+- name: Docker
+  ansible.builtin.import_tasks: docker.yml
+
+- name: Python
+  ansible.builtin.import_tasks: python.yml
+
+- name: Node.js
+  ansible.builtin.import_tasks: nodejs.yml
+
+- name: Databases
+  ansible.builtin.import_tasks: databases.yml
+
+- name: Chrome
+  ansible.builtin.import_tasks: chrome.yml
+
+- name: VLC
+  ansible.builtin.import_tasks: vlc.yml
+
+- name: UV
+  ansible.builtin.import_tasks: uv.yml
+
+- name: Rust
+  ansible.builtin.import_tasks: rust.yml
+
+- name: Claude
+  ansible.builtin.import_tasks: claude.yml

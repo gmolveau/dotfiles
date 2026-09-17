@@ -1,0 +1,35 @@
+---
+- name: Download the Signal apt key
+  ansible.builtin.get_url:
+    url: https://updates.signal.org/desktop/apt/keys.asc
+    dest: /tmp/signal-keys.asc
+    mode: "0644"
+  register: linux_signal_key
+  check_mode: false
+
+- name: Dearmor the Signal apt key
+  ansible.builtin.shell: gpg --dearmor < /tmp/signal-keys.asc > /usr/share/keyrings/signal-desktop-keyring.gpg
+  become: true
+  when: linux_signal_key is changed or linux_signal_key.changed
+  changed_when: true
+  # Same pipe as the shell script; keys.asc is ASCII-armored, the keyring
+  # must contain the binary form.
+
+- name: Clean up the downloaded key
+  ansible.builtin.file:
+    path: /tmp/signal-keys.asc
+    state: absent
+
+- name: Add the Signal repository
+  ansible.builtin.get_url:
+    url: https://updates.signal.org/static/desktop/apt/signal-desktop.sources
+    dest: /etc/apt/sources.list.d/signal-desktop.sources
+    mode: "0644"
+  become: true
+
+- name: Install Signal
+  ansible.builtin.apt:
+    name: signal-desktop
+    state: present
+    update_cache: true
+  become: true

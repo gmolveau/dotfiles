@@ -1,0 +1,9 @@
+---
+- name: Install Roboto Mono fonts
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/Library/Fonts/{{ item.dest }}"
+    mode: "0644"
+  loop: "{{ macos_fonts }}"
+  loop_control:
+    label: "{{ item.dest }}"

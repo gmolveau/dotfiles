@@ -1,0 +1,11 @@
+---
+- name: Check for rustup
+  ansible.builtin.command: cargo --version
+  changed_when: false
+  failed_when: false
+  register: linux_cargo_version
+
+- name: Install rust
+  ansible.builtin.shell: >-
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  when: linux_cargo_version.rc != 0

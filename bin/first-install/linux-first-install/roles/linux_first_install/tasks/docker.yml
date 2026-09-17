@@ -1,0 +1,24 @@
+---
+- name: Download the Docker installer
+  ansible.builtin.get_url:
+    url: https://get.docker.com
+    dest: /tmp/get-docker.sh
+    mode: "0755"
+  register: linux_docker_script
+
+- name: Check for Docker
+  ansible.builtin.command: docker --version
+  changed_when: false
+  failed_when: false
+  register: linux_docker_version
+
+- name: Run the Docker installer
+  ansible.builtin.shell: /tmp/get-docker.sh
+  when: linux_docker_version.rc != 0
+  become: true
+
+- name: Remove the Docker installer
+  ansible.builtin.file:
+    path: /tmp/get-docker.sh
+    state: absent
+  when: linux_docker_script is succeeded

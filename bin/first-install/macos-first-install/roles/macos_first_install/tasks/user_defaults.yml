@@ -1,0 +1,27 @@
+---
+- name: Apply user macOS defaults
+  community.general.osx_defaults:
+    domain: "{{ item.domain | default('NSGlobalDomain') }}"
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    host: "{{ item.host | default(omit) }}"
+    # The shell script overwrites regardless of any existing type.
+    check_type: false
+    state: present
+  loop: "{{ macos_user_defaults }}"
+  loop_control:
+    label: "{{ item.domain | default('NSGlobalDomain') }} {{ item.key }}"
+
+- name: Merge dict-valued user macOS defaults
+  community.general.osx_defaults:
+    domain: "{{ item.domain }}"
+    key: "{{ item.key }}"
+    type: dict
+    dict_mode: add
+    value: "{{ item.value }}"
+    check_type: false
+    state: present
+  loop: "{{ macos_dict_add_defaults }}"
+  loop_control:
+    label: "{{ item.domain }} {{ item.key }}"

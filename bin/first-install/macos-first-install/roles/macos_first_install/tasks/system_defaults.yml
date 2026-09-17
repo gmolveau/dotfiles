@@ -1,0 +1,13 @@
+---
+- name: Apply system-wide macOS defaults
+  community.general.osx_defaults:
+    domain: "{{ item.domain }}"
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    check_type: false
+    state: present
+  loop: "{{ macos_system_defaults }}"
+  loop_control:
+    label: "{{ item.domain }} {{ item.key }}"
+  become: true

@@ -1,0 +1,24 @@
+---
+- name: Preflight checks and tooling
+  ansible.builtin.import_tasks: preflight.yml
+
+- name: Set hostname
+  ansible.builtin.import_tasks: hostname.yml
+
+- name: Homebrew
+  ansible.builtin.import_tasks: homebrew.yml
+
+- name: Brewfile installs
+  ansible.builtin.import_tasks: brewfile.yml
+
+- name: User-level defaults
+  ansible.builtin.import_tasks: user_defaults.yml
+
+- name: System-level defaults
+  ansible.builtin.import_tasks: system_defaults.yml
+
+- name: System configuration
+  ansible.builtin.import_tasks: system.yml
+
+- name: Fonts
+  ansible.builtin.import_tasks: fonts.yml

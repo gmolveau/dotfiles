@@ -1,0 +1,59 @@
+---
+# Equivalent of ~/bin/dotfiles-install.sh (Linux side).
+# Requires git to be available (installed by the basic tools).
+
+- name: Look for a zshrc to back up
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+  register: dotfiles_zshrc
+
+- name: Back up an existing zshrc
+  ansible.builtin.copy:
+    src: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.zshrc.bck"
+    remote_src: true
+    mode: preserve
+  when: dotfiles_zshrc.stat.exists
+
+- name: Bare-clone dotfiles repository
+  ansible.builtin.git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.dotfiles"
+    bare: true
+    update: false
+    accept_hostkey: true
+
+- name: Ignore everything in the work-tree
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.dotfiles/info/exclude"
+    line: "*"
+    create: true
+    mode: "0644"
+  # Whitelist model: only tracked files are shown.
+
+- name: Hide untracked files in status
+  ansible.builtin.git_config:
+    name: status.showUntrackedFiles
+    value: "no"
+    scope: local
+    repo: "{{ ansible_facts['env']['HOME'] }}/.dotfiles"
+
+- name: Checkout dotfiles into HOME
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/git
+      - --git-dir={{ ansible_facts['env']['HOME'] }}/.dotfiles/
+      - --work-tree={{ ansible_facts['env']['HOME'] }}
+      - checkout
+      - -f
+  register: dotfiles_checkout
+  changed_when: dotfiles_checkout.stdout != ""
+
+- name: Install git-backed zsh plugins
+  ansible.builtin.git:
+    repo: "https://github.com/{{ item }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.zsh/plugins/{{ item | split('/') | last }}"
+    update: false
+  loop: "{{ dotfiles_zsh_plugins }}"
+  loop_control:
+    label: "{{ item }}"

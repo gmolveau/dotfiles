@@ -1,0 +1,8 @@
+---
+- name: Install database clients
+  ansible.builtin.apt:
+    name:
+      - sqlitebrowser
+      - postgresql-client
+    state: present
+  become: true

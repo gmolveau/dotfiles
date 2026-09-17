@@ -1,0 +1,18 @@
+---
+# State-based equivalent of ~/bin/macos-first-install.sh
+#
+# Usage:
+#   ansible-playbook macos-first-install.yml -K
+#   ansible-playbook macos-first-install.yml -K --check --diff   # preview
+#
+# -K / --ask-become-pass replaces the `sudo -v` keep-alive loop of the shell
+# script. User preferences are written as the invoking user; only the
+# /Library/Preferences and system settings tasks escalate with become.
+- name: macOS first install
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  become: false
+  roles:
+    - macos_first_install
+    - dotfiles
