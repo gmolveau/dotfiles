@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -o errexit
+set -o pipefail
+set -o nounset
+
+# update the git-backed plugins under ~/.zsh/plugins
+
+for d in ~/.zsh/plugins/*/; do
+  [ -d "${d}.git" ] || continue
+  echo "== $(basename "$d") =="
+  git -C "$d" pull --ff-only
+done

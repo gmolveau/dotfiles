@@ -10,12 +10,3 @@ fi
 source "${ZSH_ROOT}/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 # syntax-highlighting MUST be sourced last
 source "${ZSH_ROOT}/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-
-# Update the git-backed plugins under ~/.zsh/plugins
-zsh-plugins-update() {
-  for d in ~/.zsh/plugins/*/; do
-    [ -d "${d}.git" ] || continue
-    echo "== $(basename "$d") =="
-    git -C "$d" pull --ff-only
-  done
-}
