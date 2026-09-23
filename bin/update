@@ -7,8 +7,6 @@ set -o nounset
 
 function common_update() {
     [[ -n "${VIRTUAL_ENV:-}" ]] && deactivate
-    echo "updating uv ..."
-    uv self update
     uv tool upgrade --all
 
     echo "updating zsh plugins and completions ..."
@@ -40,6 +38,8 @@ function linux_update() {
     sudo apt-get dist-upgrade -y
     echo "updating npm"
     npm update -g
+    echo "updating uv ..."
+    uv self update
 }
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
