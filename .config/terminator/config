@@ -2,7 +2,7 @@
 [keybindings]
 [profiles]
   [[default]]
-    font = Roboto Mono 11
+    font = Red Hat Mono 11
     scrollback_infinite = True
     use_system_font = False
 [layouts]

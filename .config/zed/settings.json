@@ -45,7 +45,7 @@
     "show": "always",
   },
   "buffer_font_fallbacks": ["Consolas", "Courier New", "monospace"],
-  "buffer_font_family": "Roboto Mono",
+  "buffer_font_family": "Red Hat Mono",
   "auto_indent_on_paste": true,
   "soft_wrap": "editor_width",
   "ui_font_size": 16,

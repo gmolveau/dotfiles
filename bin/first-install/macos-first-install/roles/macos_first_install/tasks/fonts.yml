@@ -1,5 +1,5 @@
 ---
-- name: Install Roboto Mono fonts
+- name: Install Red Hat Mono fonts
   ansible.builtin.get_url:
     url: "{{ item.url }}"
     dest: "{{ ansible_facts['env']['HOME'] }}/Library/Fonts/{{ item.dest }}"

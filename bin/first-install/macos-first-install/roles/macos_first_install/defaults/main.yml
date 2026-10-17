@@ -5,7 +5,7 @@ macos_hostname: kebabi-laptop
 macos_brewfile: "{{ playbook_dir }}/Brewfile"
 
 macos_fonts:
-  - url: "https://github.com/google/fonts/raw/main/ofl/robotomono/RobotoMono-Italic%5Bwght%5D.ttf"
-    dest: "RobotoMono-Italic-VariableFont_wght.ttf"
-  - url: "https://github.com/google/fonts/raw/main/ofl/robotomono/RobotoMono%5Bwght%5D.ttf"
-    dest: "RobotoMono-VariableFont_wght.ttf"
+  - url: "https://github.com/google/fonts/raw/main/ofl/redhatmono/RedHatMono-Italic%5Bwght%5D.ttf"
+    dest: "RedHatMono-Italic-VariableFont_wght.ttf"
+  - url: "https://github.com/google/fonts/raw/main/ofl/redhatmono/RedHatMono%5Bwght%5D.ttf"
+    dest: "RedHatMono-VariableFont_wght.ttf"
