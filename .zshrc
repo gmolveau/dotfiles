@@ -31,6 +31,9 @@ source "${ZSH_ROOT}/gregouz.zsh-theme"
 # --- completions: fpath + compinit + zsh-completions-update ---
 source "${ZSH_ROOT}/completions.sh"
 
+# vite+ needs compdef from compinit above, but must precede plugins.sh
+source "${ZSH_ROOT}/vite-plus.sh"
+
 # --- plugins (after completions) ---
 source "${ZSH_ROOT}/plugins.sh"
 
