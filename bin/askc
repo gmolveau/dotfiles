@@ -6,43 +6,49 @@ set -o nounset
 # create a fresh working folder under a stable base and run claude there with edits allowed
 # trust the base folder once (manually); subfolders inherit trust, so no prompt per run
 
-base="${HOME}/.local/share/askclaude"
+base="${HOME}/sessions_ia"
 mkdir -p "${base}"
 
-# --purge: remove all working folders under the base and exit
-if [[ "${1:-}" == "--purge" ]]; then
-	rm -rf "${base:?}"/askc.*
-	echo "askc: purged all working folders under ${base}"
-	exit 0
+# optional <name>: working folder is <YYYY-MM-DDTHH-MM-SS>-<sanitized-name>,
+# or <YYYY-MM-DDTHH-MM-SS>-<random> when no argument is given
+# the name can be a single string ("my session") or multiple arguments
+# (my session name); all arguments are consumed to form the name
+timestamp=$(date +%Y-%m-%dT%H-%M-%S)
+default_name=$(openssl rand -hex 2)
+workdir="${base}/${timestamp}-${default_name}"
+
+if [[ $# -gt 0 ]]; then
+    # join all arguments with dashes, keeping only alphanumerics, dot, underscore;
+    # turn everything else into single dashes, then cap the length
+    raw_name=$(printf '%s ' "$@")
+    safe_name=$(printf '%s' "${raw_name}" | tr -c '[:alnum:]._-' '-' | sed -e 's/--*/-/g' -e 's/^-//' -e 's/-$//' | cut -c1-100)
+    if [[ ! -z "${safe_name}" ]]; then
+        workdir="${base}/${timestamp}-${safe_name}"
+    fi
+    # all arguments were used for the name; nothing left for the agent
+    set --
 fi
 
-# --name <session>: use a named working folder instead of a random one
-if [[ "${1:-}" == "--name" ]]; then
-	if [[ -z "${2:-}" ]]; then
-		echo "askc: --name requires a session name" >&2
-		exit 1
-	fi
-	workdir="${base}/${2}"
-	mkdir -p "${workdir}"
-	shift 2
-else
-	workdir=$(mktemp -d "${base}/askc.XXXXXX")
-fi
+mkdir -p "${workdir}"
 
 ai_agent="${AI_AGENT:-opencode}"
 
-echo "askc: working in ${workdir} (agent: ${ai_agent})"
+echo "askc: launching ${ai_agent} in ${workdir}"
 
 cd "${workdir}"
 
 case "${ai_agent}" in
-	claude)
-		exec claude --permission-mode acceptEdits "$@" ;;
-	opencode)
-		exec opencode "$@" ;;
-	vibe)
-		exec vibe --trust --agent accept-edits "$@" ;;
-	*)
-		echo "askc: unknown agent '${ai_agent}'" >&2
-		exit 2;;
+claude)
+    exec claude --permission-mode acceptEdits "$@"
+    ;;
+opencode)
+    exec opencode "$@"
+    ;;
+vibe)
+    exec vibe --trust --agent accept-edits "$@"
+    ;;
+*)
+    echo "askc: unknown agent '${ai_agent}'" >&2
+    exit 2
+    ;;
 esac
